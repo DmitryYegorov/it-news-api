@@ -14,10 +14,15 @@ app.use(async (ctx, next) => {
     const ms = Date.now() - start;
     ctx.set('X-Response-Time', `${ms}ms`);
 
-})
+});
 
 app.use(async ctx => {
     ctx.body = '<h1>Hello, World!</h1>';
+    if (ctx.method === 'GET' && ctx.url === '/about'){
+        ctx.body = '<h1>About</h1>';
+    }
 });
 
-app.listen(3000);
+app.listen(3000, () => {
+    console.log('Server has been running...')
+});
