@@ -1,12 +1,15 @@
 {
-  "name": "api-test",
+  "name": "api-news",
   "version": "1.0.0",
-  "description": "test application, testing a KOA framework",
+  "description": "news portal of IT",
   "main": "index.js",
   "dependencies": {
-    "koa": "^2.13.1"
+    "koa": "^2.13.1",
+    "pm2": "^4.5.5"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "eslint": "^7.21.0"
+  },
   "scripts": {
     "test": "test"
   },

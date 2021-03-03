@@ -17,7 +17,7 @@ app.use(async (ctx, next) => {
 });
 
 app.use(async ctx => {
-    ctx.body = '<h1>Hello, World!</h1>';
+    ctx.body = '<h1 style="color: green;">Hello, World!</h1>';
     if (ctx.method === 'GET' && ctx.url === '/about'){
         ctx.body = '<h1>About</h1>';
     }
