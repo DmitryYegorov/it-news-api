@@ -8,7 +8,8 @@
     "pm2": "^4.5.5"
   },
   "devDependencies": {
-    "eslint": "^7.21.0"
+    "eslint": "^7.21.0",
+    "eslint-config-airbnb-base": "^14.2.1"
   },
   "scripts": {
     "test": "test"
