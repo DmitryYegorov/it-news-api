@@ -14,7 +14,7 @@
   },
   "scripts": {
     "test": "test",
-    "lint": "./node_modules/.bin/eslint"
+    "lint": "eslint **/*.js"
   },
   "author": "Dmitry Yegorov <dmitry.yegorov@effective-soft.com>",
   "license": "ISC"
