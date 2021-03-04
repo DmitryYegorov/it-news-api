@@ -4,7 +4,7 @@ const app = new Koa();
 
 app.use(async (ctx, next) => {
   await next();
-  console.log(`${ctx.method} ${ctx.url}`); // warning no-console
+  console.log(`${ctx.method} ${ctx.url}`);
 });
 
 app.use(async (ctx, next) => {
@@ -21,4 +21,6 @@ app.use(async (ctx) => {
   }
 });
 
-app.listen(process.env.PORT);
+app.listen(process.env.PORT, () => {
+  console.log('Server has been running...');
+});
