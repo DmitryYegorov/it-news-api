@@ -20,6 +20,9 @@
     "test": "test",
     "lint": "eslint **/*.js"
   },
+  "husky": {
+    "hooks": {}
+  },
   "author": "Dmitry Yegorov <dmitry.yegorov@effective-soft.com>",
   "license": "ISC"
 }
