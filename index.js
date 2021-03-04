@@ -3,26 +3,22 @@ const Koa = require('koa');
 const app = new Koa();
 
 app.use(async (ctx, next) => {
-    await next();
-    const rt = ctx.response.get('X-Response-Time');
-    console.log(`${ctx.method} ${ctx.url}`);
+  await next();
+  console.log(`${ctx.method} ${ctx.url}`); // warning no-console
 });
 
 app.use(async (ctx, next) => {
-    const start = Date.now();
-    await next();
-    const ms = Date.now() - start;
-    ctx.set('X-Response-Time', `${ms}ms`);
-
+  const start = Date.now();
+  await next();
+  const ms = Date.now() - start;
+  ctx.set('X-Response-Time', `${ms}ms`);
 });
 
-app.use(async ctx => {
-    ctx.body = '<h1 style="color: green;">Hello, World!</h1>';
-    if (ctx.method === 'GET' && ctx.url === '/about'){
-        ctx.body = '<h1>About</h1>';
-    }
+app.use(async (ctx) => {
+  ctx.body = '<h1 style="color: green;">Hello, World!</h1>';
+  if (ctx.method === 'GET' && ctx.url === '/about') {
+    ctx.body = '<h1>About</h1>';
+  }
 });
 
-app.listen(3000, () => {
-    console.log('Server has been running...')
-});
+app.listen(process.env.PORT);
