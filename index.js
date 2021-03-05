@@ -9,6 +9,11 @@ router.get("/", (ctx, next) => {
   next();
 });
 
+router.get("/about", (ctx, next) => {
+  ctx.body = "<h1>About</h1>";
+  next();
+});
+
 app.use(router.routes()).use(router.allowedMethods());
 app.listen(process.env.PORT, () => {
   console.log("Server has been running...");
