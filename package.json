@@ -5,6 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "koa": "^2.13.1",
+    "koa-router": "^10.0.0",
     "pm2": "^4.5.5"
   },
   "devDependencies": {
