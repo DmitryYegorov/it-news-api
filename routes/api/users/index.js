@@ -15,11 +15,11 @@ users
     ctx.body = "Create a new users";
     next();
   })
-  .put("/users/:id", (ctx, next) => {
+  .put("/user/:id", (ctx, next) => {
     ctx.body = "Update a users";
     next();
   })
-  .delete("/post/:id", (ctx, next) => {
+  .delete("/user/:id", (ctx, next) => {
     ctx.body = "Delete a users";
     next();
   });
