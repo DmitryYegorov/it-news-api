@@ -11,6 +11,14 @@ posts
     ctx.body = "Get one post by ID";
     next();
   })
+  .get("/posts/author/:id", (ctx, next) => {
+    ctx.body = "Get the posts by author (userId)";
+    next();
+  })
+  .get("/posts/category/:id", (ctx, next) => {
+    ctx.body = "Get the posts by category";
+    next();
+  })
   .post("/post", (ctx, next) => {
     ctx.body = "Create a new post";
     next();
