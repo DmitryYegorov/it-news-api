@@ -19,7 +19,7 @@
   },
   "scripts": {
     "test": "test",
-    "lint": "eslint '**/*.js'"
+    "lint": "eslint \"**/*.js\""
   },
   "husky": {
     "hooks": {
