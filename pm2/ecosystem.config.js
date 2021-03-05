@@ -2,7 +2,7 @@ module.exports = {
   apps: [
     {
       script: "index.js",
-      watch: ".",
+      watch: true,
       env: {
         NODE_ENV: "development",
         PORT: 3000,
