@@ -1,7 +1,7 @@
 const Router = require("koa-router");
 
 const subscription = new Router({
-  prefix: "/subscription",
+  prefix: "/subscriptions",
 });
 
 subscription
@@ -10,14 +10,14 @@ subscription
     next();
   })
   .get("/:id", (ctx, next) => {
-    ctx.body = "Get subscription by ID";
+    ctx.body = "Get subscriptions by ID";
     next();
   })
   .post("/", (ctx, next) => {
-    ctx.body = "Create a subscription";
+    ctx.body = "Create a subscriptions";
     next();
   })
-  .get("/:user", (ctx, next) => {
+  .get("/user/:user", (ctx, next) => {
     ctx.body = "Get the subscriptions by user";
     next();
   });

@@ -3,7 +3,7 @@ const Router = require("koa-router");
 const posts = require("./posts");
 const comments = require("./comments");
 const users = require("./users");
-const subscriptions = require("./subscription");
+const subscriptions = require("./subscriptions");
 
 const router = new Router({
   prefix: "/api",
