@@ -2,11 +2,7 @@ const Koa = require("koa");
 
 const app = new Koa();
 const { PORT } = process.env;
-const posts = require("./routes/api/posts");
-const users = require("./routes/api/users");
-const comments = require("./routes/api/comments");
+const api = require("./routes/api/apiRouter");
 
-app.use(posts.routes()).use(posts.allowedMethods());
-app.use(users.routes()).use(users.allowedMethods());
-app.use(comments.routes()).use(comments.allowedMethods());
+app.use(api.routes()).use(api.allowedMethods());
 app.listen(PORT);
