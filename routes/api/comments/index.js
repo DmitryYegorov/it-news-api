@@ -5,7 +5,7 @@ const comments = new Router();
 comments
   .get("/comments/post/:id", getAllComments)
   .get("/comment/:id", getCommentById)
-  .post("/comment", createComment)
+  .post("/comment/:post_id", createComment)
   .put("/comment/:id", updateComment)
   .delete("/comment/:id", removeComment);
 
