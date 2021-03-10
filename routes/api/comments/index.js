@@ -11,26 +11,31 @@ comments
 
 function getAllComments(ctx, next) {
   ctx.body = "Get all comments by post";
+  ctx.status = 200;
   next();
 }
 
 function getCommentById(ctx, next) {
   ctx.body = "Get one comment by ID";
+  ctx.status = 200;
   next();
 }
 
 function createComment(ctx, next) {
   ctx.body = "Create a new comment";
+  ctx.status = 201;
   next();
 }
 
 function updateComment(ctx, next) {
   ctx.body = "Update a comment";
+  ctx.status = 200;
   next();
 }
 
 function removeComment(ctx, next) {
   ctx.body = "Delete a comment";
+  ctx.status = 204;
   next();
 }
 
