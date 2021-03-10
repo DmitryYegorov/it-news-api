@@ -9,9 +9,9 @@ const router = new Router({
   prefix: "/api",
 });
 
-router.use(posts.routes()).use(posts.allowedMethods());
-router.use(comments.routes()).use(posts.allowedMethods());
-router.use(users.routes()).use(posts.allowedMethods());
-router.use(subscriptions.routes()).use(subscriptions.allowedMethods());
+router.use(posts.routes());
+router.use(comments.routes());
+router.use(users.routes());
+router.use(subscriptions.routes());
 
 module.exports = router;
