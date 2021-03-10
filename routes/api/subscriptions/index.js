@@ -5,21 +5,29 @@ const subscription = new Router({
 });
 
 subscription
-  .get("/", (ctx, next) => {
-    ctx.body = "Get all subscriptions";
-    next();
-  })
-  .get("/:id", (ctx, next) => {
-    ctx.body = "Get subscriptions by ID";
-    next();
-  })
-  .post("/", (ctx, next) => {
-    ctx.body = "Create a subscriptions";
-    next();
-  })
-  .get("/user/:user", (ctx, next) => {
-    ctx.body = "Get the subscriptions by user";
-    next();
-  });
+  .get("/", getAllSubscriptions)
+  .get("/:id", getSubscriptionById)
+  .post("/", createSubscription)
+  .get("/user/:user", getSubscriptionsByUser);
+
+function getAllSubscriptions(ctx, next) {
+  ctx.body = "Get all subscriptions";
+  next();
+}
+
+function getSubscriptionById(ctx, next) {
+  ctx.body = "Get subscriptions by ID";
+  next();
+}
+
+function createSubscription(ctx, next) {
+  ctx.body = "Create a subscriptions";
+  next();
+}
+
+function getSubscriptionsByUser(ctx, next) {
+  ctx.body = "Get the subscriptions by user";
+  next();
+}
 
 module.exports = subscription;
