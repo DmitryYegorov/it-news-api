@@ -4,10 +4,6 @@ const koaJson = require("koa-json");
 const koaLogger = require("koa-logger");
 const koaBodyParser = require("koa-bodyparser");
 
-const dotenv = require("dotenv");
-
-dotenv.config();
-
 const app = new Koa();
 const { PORT } = process.env;
 const api = require("./routes/api");
