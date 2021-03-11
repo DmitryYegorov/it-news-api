@@ -22,9 +22,6 @@ app.use(
     },
   })
 );
-app.use(async (ctx) => {
-  ctx.body = ctx.request.body;
-});
 app.use(api.routes());
 app.use(api.allowedMethods());
 app.listen(PORT);
