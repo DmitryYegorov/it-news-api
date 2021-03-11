@@ -9,9 +9,9 @@ const { PORT } = process.env;
 const api = require("./routes/api");
 
 app.use(koaLogger());
+app.use(koaCors());
 app.use(koaJson());
 app.use(koaBodyParser());
-app.use(koaCors());
 app.use(api.routes());
 app.use(api.allowedMethods());
 app.listen(PORT);
