@@ -10,7 +10,7 @@ comments
   .delete("/comment/:id", removeComment);
 
 function getAllComments(ctx, next) {
-  ctx.body = "Get all comments by post";
+  ctx.body = { message: "Get all comments by post" };
   ctx.status = 200;
   next();
 }

@@ -8,8 +8,8 @@ const app = new Koa();
 const { PORT } = process.env;
 const api = require("./routes/api");
 
-app.use(koaLogger());
 app.use(koaCors());
+app.use(koaLogger());
 app.use(koaJson());
 app.use(koaBodyParser());
 app.use(api.routes());
