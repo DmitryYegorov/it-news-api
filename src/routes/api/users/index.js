@@ -1,4 +1,5 @@
 const Router = require("koa-router");
+const User = require("../../../entities/user");
 
 const users = new Router();
 
@@ -22,9 +23,18 @@ function getUserById(ctx, next) {
 }
 
 function createUser(ctx, next) {
-  ctx.body = "Create a new user";
-  ctx.status = 201;
-  next();
+  try {
+    const user = ctx.request.body;
+    if (user) {
+      User.createUser(user).then((res) => {
+        ctx.statusCode = 201;
+        ctx.body = res;
+        next();
+      });
+    }
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 function updateUser(ctx, next) {
