@@ -34,6 +34,8 @@ function createUser(ctx, next) {
     }
   } catch (e) {
     console.log(e);
+    ctx.statusCode = 500;
+    ctx.body = e;
   }
 }
 
