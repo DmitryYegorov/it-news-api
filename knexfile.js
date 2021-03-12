@@ -21,6 +21,9 @@ module.exports = {
       user: DB_USERNAME,
       password: DB_PASSWORD,
     },
+    migrations: {
+      tableName: "knex-migrations",
+    },
     debug: true,
   },
 };
