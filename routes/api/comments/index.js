@@ -5,12 +5,12 @@ const comments = new Router();
 comments
   .get("/comments/post/:id", getAllComments)
   .get("/comment/:id", getCommentById)
-  .post("/comment", createComment)
+  .post("/comment/:post_id", createComment)
   .put("/comment/:id", updateComment)
   .delete("/comment/:id", removeComment);
 
 function getAllComments(ctx, next) {
-  ctx.body = "Get all comments by post";
+  ctx.body = { message: "Get all comments by post" };
   ctx.status = 200;
   next();
 }
