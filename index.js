@@ -6,7 +6,7 @@ const koaBodyParser = require("koa-bodyparser");
 
 const app = new Koa();
 const { PORT } = process.env;
-const api = require("./routes/api");
+const api = require("./src/routes/api");
 
 app.use(
   koaCors({
