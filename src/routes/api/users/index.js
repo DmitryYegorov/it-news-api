@@ -10,45 +10,75 @@ users
   .put("/user/:id", updateUser)
   .delete("/user/:id", removeUser);
 
-function getAllUsers(ctx, next) {
-  ctx.body = "Get all users";
-  ctx.status = 200;
-  next();
+async function getAllUsers(ctx, next) {
+  try {
+    ctx.body = await User.getAllUsers();
+    next();
+  } catch (e) {
+    console.log(e);
+    ctx.body = e;
+    ctx.status = 500;
+  }
 }
 
-function getUserById(ctx, next) {
-  ctx.body = "Get one user by ID";
-  ctx.status = 200;
-  next();
+async function getUserById(ctx, next) {
+  try {
+    const { id } = ctx.request.params;
+    const user = await User.getUserById(id);
+    ctx.body = JSON.stringify(user);
+    ctx.status = 200;
+    next();
+  } catch (e) {
+    console.error(e);
+    ctx.body = e;
+    ctx.status = 500;
+  }
 }
 
-function createUser(ctx, next) {
+async function createUser(ctx, next) {
   try {
     const user = ctx.request.body;
     if (user) {
-      User.createUser(user).then((res) => {
-        ctx.statusCode = 201;
-        ctx.body = res;
-        next();
-      });
+      const res = await User.createUser(user);
+      ctx.status = 201;
+      ctx.body = JSON.stringify(res);
+      next();
     }
   } catch (e) {
     console.log(e);
-    ctx.statusCode = 500;
+    ctx.status = 500;
     ctx.body = e;
   }
 }
 
-function updateUser(ctx, next) {
-  ctx.body = "Update a users";
-  ctx.status = 200;
-  next();
+async function updateUser(ctx, next) {
+  try {
+    const data = ctx.request.body;
+    const { id } = ctx.request.params;
+    if (data) {
+      const res = await User.updateUser(id, data);
+      ctx.status = 200;
+      ctx.body = JSON.stringify(res);
+      next();
+    }
+  } catch (e) {
+    console.log(e);
+    ctx.status = 500;
+    ctx.body = e;
+  }
 }
 
-function removeUser(ctx, next) {
-  ctx.body = "Delete a users";
-  ctx.status = 204;
-  next();
+async function removeUser(ctx, next) {
+  try {
+    const { id } = ctx.request.params;
+    ctx.body = await User.removeUserById(id);
+    ctx.status = 204;
+    next();
+  } catch (e) {
+    console.log(e);
+    ctx.status = 500;
+    ctx.body = e;
+  }
 }
 
 module.exports = users;
