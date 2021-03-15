@@ -21,7 +21,7 @@ class PostModel extends Model {
       properties: {
         postid: { type: "integer" },
         posttitle: { type: "string", minLength: 5, maxLength: 60 },
-        posttext: { type: "string", minLength: 10, maxLength: 60 },
+        posttext: { type: "string" },
         postauthor: { type: "integer" },
       },
     };
