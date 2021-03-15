@@ -3,6 +3,7 @@ exports.up = function (knex) {
     table.increments("postid").primary().notNullable();
     table
       .integer("postcategory")
+      .notNullable()
       .index()
       .references("categoryid")
       .inTable("categories")
@@ -11,6 +12,7 @@ exports.up = function (knex) {
     table.text("posttext").notNullable();
     table
       .integer("postauthor")
+      .notNullable()
       .index()
       .references("userid")
       .inTable("users")

@@ -17,7 +17,6 @@ async function getAllPosts(ctx, next) {
     ctx.body = await Post.getAllPosts();
     next();
   } catch (e) {
-    console.log(e);
     ctx.body = e;
     ctx.status = 500;
   }
@@ -31,7 +30,6 @@ async function getPostById(ctx, next) {
     ctx.status = 200;
     next();
   } catch (e) {
-    console.error(e);
     ctx.body = e;
     ctx.status = 500;
   }
@@ -43,7 +41,6 @@ async function getPostsByCategory(ctx, next) {
     ctx.body = await Post.getPostsByCategory(category);
     next();
   } catch (e) {
-    console.log(e);
     ctx.body = e;
     ctx.status = 500;
   }
@@ -53,9 +50,9 @@ async function getPostsByAuthor(ctx, next) {
   try {
     const { author } = ctx.request.params;
     ctx.body = await Post.getPostsByAuthor(author);
+    ctx.status = 201;
     next();
   } catch (e) {
-    console.log(e);
     ctx.body = e;
     ctx.status = 500;
   }
@@ -71,9 +68,8 @@ async function createPost(ctx, next) {
       next();
     }
   } catch (e) {
-    console.log(e);
-    ctx.status = 500;
     ctx.body = e;
+    ctx.status = 500;
   }
 }
 
@@ -88,9 +84,8 @@ async function updatePost(ctx, next) {
       next();
     }
   } catch (e) {
-    console.log(e);
-    ctx.status = 500;
     ctx.body = e;
+    ctx.status = 500;
   }
 }
 
@@ -101,9 +96,8 @@ async function removePost(ctx, next) {
     ctx.status = 204;
     next();
   } catch (e) {
-    console.log(e);
-    ctx.status = 500;
     ctx.body = e;
+    ctx.status = 500;
   }
 }
 

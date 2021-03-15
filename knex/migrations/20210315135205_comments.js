@@ -3,6 +3,7 @@ exports.up = function (knex) {
     table.increments("commentid").primary().notNullable();
     table
       .integer("commentauthor")
+      .notNullable()
       .index()
       .references("userid")
       .inTable("users")
@@ -10,6 +11,7 @@ exports.up = function (knex) {
     table.text("commenttext").notNullable();
     table
       .integer("commentpost")
+      .notNullable()
       .index()
       .references("postid")
       .inTable("posts")

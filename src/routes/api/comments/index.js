@@ -1,42 +1,77 @@
 const Router = require("koa-router");
+const Comment = require("../../../entities/comment");
 
 const comments = new Router();
 
 comments
-  .get("/comments/post/:id", getAllComments)
-  .get("/comment/:id", getCommentById)
-  .post("/comment/:post_id", createComment)
-  .put("/comment/:id", updateComment)
-  .delete("/comment/:id", removeComment);
+  .get("/comments/:id", getCommentById)
+  .get("/comments/post/:post", getCommentsByPost)
+  .post("/comments", createComment)
+  .put("/comments/:id", updateComment)
+  .delete("/comments/:id", removeComment);
 
-function getAllComments(ctx, next) {
-  ctx.body = { message: "Get all comments by post" };
-  ctx.status = 200;
-  next();
+async function getCommentById(ctx, next) {
+  try {
+    const { id } = ctx.request.params;
+    ctx.body = await Comment.getCommentById(id);
+    ctx.status = 200;
+  } catch (e) {
+    next(e);
+  }
 }
 
-function getCommentById(ctx, next) {
-  ctx.body = "Get one comment by ID";
-  ctx.status = 200;
-  next();
+async function getCommentsByPost(ctx, next) {
+  try {
+    const { post } = ctx.request.params;
+    const comment = await Comment.getCommentsByPost(post);
+    if (comment) {
+      ctx.body = comment;
+      ctx.status = 200;
+    }
+  } catch (e) {
+    next(e);
+  }
 }
 
-function createComment(ctx, next) {
-  ctx.body = "Create a new comment";
-  ctx.status = 201;
-  next();
+async function createComment(ctx, next) {
+  try {
+    const comment = ctx.request.body;
+    if (comment) {
+      const res = await Comment.createComment(comment);
+      console.log(res);
+      ctx.body = JSON.stringify(res);
+      ctx.status = 201;
+    }
+  } catch (e) {
+    next(e);
+  }
 }
 
-function updateComment(ctx, next) {
-  ctx.body = "Update a comment";
-  ctx.status = 200;
-  next();
+async function updateComment(ctx, next) {
+  try {
+    const { id } = ctx.request.params;
+    const comment = ctx.request.body;
+    if (comment) {
+      const res = await Comment.createComment(id, comment);
+      ctx.status = 201;
+      ctx.body = JSON.stringify(res);
+      next();
+    }
+  } catch (e) {
+    console.log(e);
+    ctx.status = 500;
+    ctx.body = e;
+  }
 }
 
-function removeComment(ctx, next) {
-  ctx.body = "Delete a comment";
-  ctx.status = 204;
-  next();
+async function removeComment(ctx, next) {
+  try {
+    const { id } = ctx.request.params;
+    ctx.body = await Comment.removeComment(id);
+    ctx.status = 204;
+  } catch (e) {
+    next(e);
+  }
 }
 
 module.exports = comments;
