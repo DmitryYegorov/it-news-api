@@ -1,13 +1,12 @@
-const { Model } = require("objection");
-const { timestampPlugin } = require("objection-timestamps");
+const Model = require("./base");
 
-class PostModel extends timestampPlugin()(Model) {
+class PostModel extends Model {
   static get tableName() {
-    return "users";
+    return "posts";
   }
 
   static get idColumn() {
-    return "userid";
+    return "postid";
   }
 
   static get timestamp() {
@@ -17,7 +16,7 @@ class PostModel extends timestampPlugin()(Model) {
   static get jsonSchema() {
     return {
       type: "object",
-      required: ["username", "userlogin", "useremail"],
+      required: ["posttitle", "posttext", "postauthor"],
 
       properties: {
         postid: { type: "integer" },

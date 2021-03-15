@@ -1,7 +1,6 @@
-const { Model } = require("objection");
-const { timestampPlugin } = require("objection-timestamps");
+const Model = require("./base");
 
-class UserModel extends timestampPlugin()(Model) {
+class UserModel extends Model {
   static get tableName() {
     return "users";
   }
