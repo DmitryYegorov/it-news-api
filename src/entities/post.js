@@ -25,10 +25,30 @@ async function removePostById(id) {
   return res;
 }
 
+async function getPostsByCategory(category) {
+  const posts = await Post.query()
+    .where({
+      postcategory: category,
+    })
+    .select();
+  return posts;
+}
+
+async function getPostsByAuthor(author) {
+  const posts = await Post.query()
+    .where({
+      postauthor: author,
+    })
+    .select();
+  return posts;
+}
+
 module.exports = {
   getAllPosts,
   getPostById,
   createPost,
   updatePost,
   removePostById,
+  getPostsByCategory,
+  getPostsByAuthor,
 };

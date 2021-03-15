@@ -6,6 +6,8 @@ const posts = new Router();
 posts
   .get("/posts", getAllPosts)
   .get("/posts/:id", getPostById)
+  .get("/posts/category/:category", getPostsByCategory)
+  .get("/posts/author/:author", getPostsByAuthor)
   .post("/posts", createPost)
   .put("/posts/:id", updatePost)
   .delete("/posts/:id", removePost);
@@ -30,6 +32,30 @@ async function getPostById(ctx, next) {
     next();
   } catch (e) {
     console.error(e);
+    ctx.body = e;
+    ctx.status = 500;
+  }
+}
+
+async function getPostsByCategory(ctx, next) {
+  try {
+    const { category } = ctx.request.params;
+    ctx.body = await Post.getPostsByCategory(category);
+    next();
+  } catch (e) {
+    console.log(e);
+    ctx.body = e;
+    ctx.status = 500;
+  }
+}
+
+async function getPostsByAuthor(ctx, next) {
+  try {
+    const { author } = ctx.request.params;
+    ctx.body = await Post.getPostsByAuthor(author);
+    next();
+  } catch (e) {
+    console.log(e);
     ctx.body = e;
     ctx.status = 500;
   }
