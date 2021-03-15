@@ -4,7 +4,7 @@ exports.up = function (knex) {
     table.string("userlogin", 20).notNullable().unique();
     table.string("username", 255).notNullable();
     table.string("useremail", 255).notNullable().unique();
-    table.string("password", 255).notNullable();
+    table.string("userpassword", 255).notNullable();
     table.dateTime("created_at").notNullable();
     table.dateTime("updated_at").notNullable();
   });
