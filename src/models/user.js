@@ -17,6 +17,7 @@ class UserModel extends Model {
       properties: {
         userid: { type: "integer" },
         userlogin: { type: "string", minLength: 5, maxLength: 60 },
+        useremail: { type: "string", minLength: 10, maxLength: 60 },
         username: { type: "string", minLength: 10, maxLength: 255 },
         userpassword: { type: "string", minLength: 8, maxLength: 255 },
       },
