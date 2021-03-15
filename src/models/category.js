@@ -1,4 +1,4 @@
-const Model = require("./base");
+const Model = require("./BaseModel");
 
 class CategoryModel extends Model {
   static get tableName() {
