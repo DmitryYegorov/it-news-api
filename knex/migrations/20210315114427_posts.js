@@ -1,6 +1,12 @@
 exports.up = function (knex) {
   return knex.schema.createTable("posts", function (table) {
     table.increments("postid").primary().notNullable();
+    table
+      .integer("postcategory")
+      .index()
+      .references("categoryid")
+      .inTable("categories")
+      .onDelete("SET NULL");
     table.string("posttitle", 255).notNullable();
     table.text("posttext").notNullable();
     table

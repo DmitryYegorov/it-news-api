@@ -23,6 +23,7 @@ class PostModel extends Model {
         posttitle: { type: "string", minLength: 5, maxLength: 60 },
         posttext: { type: "string" },
         postauthor: { type: "integer" },
+        postcategory: { type: "integer" },
       },
     };
   }
