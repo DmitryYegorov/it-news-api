@@ -10,7 +10,7 @@ subscription
   .post("/", createSubscription)
   .get("/user/:user", getSubscriptionsByUser)
   .get("/author/:author", getSubscribers)
-  .delete("/:id", removeSubsribe);
+  .delete("/:id", removeSubscribe);
 
 async function getAllSubscriptions(ctx, next) {
   try {
@@ -71,7 +71,7 @@ async function getSubscribers(ctx, next) {
   }
 }
 
-async function removeSubsribe(ctx, next) {
+async function removeSubscribe(ctx, next) {
   try {
     const { id } = ctx.request.body;
     const removed = await Subscription.removeSubscription(id);
