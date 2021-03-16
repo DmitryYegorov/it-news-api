@@ -45,7 +45,7 @@ async function createComment(ctx, next) {
     const comment = ctx.request.body;
     const res = await Comment.createComment(comment);
     if (res) {
-      ctx.body = JSON.stringify(res);
+      ctx.body = res;
       ctx.status = 201;
       next();
     }
@@ -62,7 +62,7 @@ async function updateComment(ctx, next) {
     const res = await Comment.createComment(id, comment);
     if (res) {
       ctx.status = 201;
-      ctx.body = JSON.stringify(res);
+      ctx.body = res;
       next();
     }
   } catch (e) {
