@@ -14,6 +14,7 @@
     "koa-router": "^10.0.0",
     "objection": "^2.2.14",
     "objection-timestamps": "^4.0.0",
+    "objection-visibility": "^1.1.0",
     "pg": "^8.5.1",
     "pm2": "^4.5.5"
   },
