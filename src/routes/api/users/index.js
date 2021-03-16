@@ -6,9 +6,9 @@ const users = new Router();
 users
   .get("/users", getAllUsers)
   .get("/users/:id", getUserById)
-  .post("/user", createUser)
-  .put("/user/:id", updateUser)
-  .delete("/user/:id", removeUser);
+  .post("/users", createUser)
+  .put("/users/:id", updateUser)
+  .delete("/users/:id", removeUser);
 
 async function getAllUsers(ctx, next) {
   try {
@@ -58,10 +58,10 @@ async function updateUser(ctx, next) {
   try {
     const data = ctx.request.body;
     const { id } = ctx.request.params;
-    if (data) {
-      const res = await User.updateUser(id, data);
+    const res = await User.updateUser(id, data);
+    if (res) {
       ctx.status = 200;
-      ctx.body = JSON.stringify(res);
+      ctx.body = res;
       next();
     }
   } catch (e) {

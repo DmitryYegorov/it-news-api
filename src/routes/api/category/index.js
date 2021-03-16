@@ -15,7 +15,6 @@ async function getAllCategories(ctx, next) {
     ctx.body = await Category.getAllCategories();
     next();
   } catch (e) {
-    console.log(e);
     ctx.body = e;
     ctx.status = 500;
   }
@@ -29,7 +28,6 @@ async function getCategoryById(ctx, next) {
     ctx.status = 200;
     next();
   } catch (e) {
-    console.error(e);
     ctx.body = e;
     ctx.status = 500;
   }
@@ -45,7 +43,6 @@ async function createCategory(ctx, next) {
       next();
     }
   } catch (e) {
-    console.log(e);
     ctx.status = 500;
     ctx.body = e;
   }
@@ -62,7 +59,6 @@ async function updateCategory(ctx, next) {
       next();
     }
   } catch (e) {
-    console.log(e);
     ctx.status = 500;
     ctx.body = e;
   }
@@ -75,7 +71,6 @@ async function removeCategory(ctx, next) {
     ctx.status = 204;
     next();
   } catch (e) {
-    console.log(e);
     ctx.status = 500;
     ctx.body = e;
   }
