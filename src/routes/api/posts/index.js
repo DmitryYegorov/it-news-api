@@ -74,10 +74,10 @@ async function getPostsByAuthor(ctx, next) {
 async function createPost(ctx, next) {
   try {
     const post = ctx.request.body;
-    if (post) {
-      const data = await Post.createPost(post);
+    const res = await Post.createPost(post);
+    if (res) {
       ctx.status = 201;
-      ctx.body = JSON.stringify(data);
+      ctx.body = res;
       next();
     }
   } catch (e) {
@@ -90,10 +90,10 @@ async function updatePost(ctx, next) {
   try {
     const data = ctx.request.body;
     const { id } = ctx.request.params;
-    if (data) {
-      const res = await Post.updatePost(id, data);
+    const res = await Post.updatePost(id, data);
+    if (res) {
       ctx.status = 200;
-      ctx.body = JSON.stringify(res);
+      ctx.body = res;
       next();
     }
   } catch (e) {
