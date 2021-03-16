@@ -6,7 +6,7 @@ class CategoryModel extends Model {
   }
 
   static get idColumn() {
-    return "categoryid";
+    return "id";
   }
 
   static get timestamp() {
@@ -16,11 +16,11 @@ class CategoryModel extends Model {
   static get jsonSchema() {
     return {
       type: "object",
-      required: ["categoryname"],
+      required: ["name"],
 
       properties: {
-        categoryid: { type: "integer" },
-        categoryname: { type: "string", minLength: 5, maxLength: 60 },
+        id: { type: "integer" },
+        name: { type: "string", minLength: 5, maxLength: 60 },
       },
     };
   }

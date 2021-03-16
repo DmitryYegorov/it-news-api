@@ -6,7 +6,7 @@ class UserModel extends Model {
   }
 
   static get idColumn() {
-    return "userid";
+    return "id";
   }
 
   static get timestamp() {
@@ -16,14 +16,14 @@ class UserModel extends Model {
   static get jsonSchema() {
     return {
       type: "object",
-      required: ["username", "userlogin", "useremail"],
+      required: ["name", "login", "email"],
 
       properties: {
-        userid: { type: "integer" },
-        userlogin: { type: "string", minLength: 5, maxLength: 60 },
-        useremail: { type: "string", minLength: 10, maxLength: 60 },
-        username: { type: "string", minLength: 10, maxLength: 255 },
-        userpassword: { type: "string", minLength: 8, maxLength: 255 },
+        id: { type: "integer" },
+        login: { type: "string", minLength: 5, maxLength: 60 },
+        email: { type: "string", minLength: 10, maxLength: 60 },
+        name: { type: "string", minLength: 10, maxLength: 255 },
+        password: { type: "string", minLength: 8, maxLength: 255 },
       },
     };
   }

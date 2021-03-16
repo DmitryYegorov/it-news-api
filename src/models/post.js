@@ -6,7 +6,7 @@ class PostModel extends Model {
   }
 
   static get idColumn() {
-    return "postid";
+    return "id";
   }
 
   static get timestamp() {
@@ -16,14 +16,14 @@ class PostModel extends Model {
   static get jsonSchema() {
     return {
       type: "object",
-      required: ["posttitle", "posttext", "postauthor"],
+      required: ["title", "text", "author"],
 
       properties: {
-        postid: { type: "integer" },
-        posttitle: { type: "string", minLength: 5, maxLength: 60 },
-        posttext: { type: "string" },
-        postauthor: { type: "integer" },
-        postcategory: { type: "integer" },
+        id: { type: "integer" },
+        title: { type: "string", minLength: 5, maxLength: 60 },
+        text: { type: "string" },
+        author: { type: "integer" },
+        category: { type: "integer" },
       },
     };
   }

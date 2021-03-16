@@ -6,7 +6,7 @@ class CommentModel extends Model {
   }
 
   static get idColumn() {
-    return "commentid";
+    return "id";
   }
 
   static get timestamp() {
@@ -16,13 +16,13 @@ class CommentModel extends Model {
   static get jsonSchema() {
     return {
       type: "object",
-      required: ["commenttext"],
+      required: ["text"],
 
       properties: {
-        commentid: { type: "integer" },
-        commenttext: { type: "string" },
-        commentauthor: { type: "integer" },
-        commentpost: { type: "integer" },
+        id: { type: "integer" },
+        text: { type: "string" },
+        author: { type: "integer" },
+        post: { type: "integer" },
       },
     };
   }

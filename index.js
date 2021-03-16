@@ -11,16 +11,6 @@ const app = new Koa();
 const { PORT } = process.env;
 const api = require("./src/routes/api");
 
-app.use(async (ctx, next) => {
-  try {
-    await next();
-  } catch (err) {
-    ctx.status = err.statusCode || err.status || 500;
-    ctx.body = {
-      message: err.message,
-    };
-  }
-});
 app.use(
   koaCors({
     origin: "*",
