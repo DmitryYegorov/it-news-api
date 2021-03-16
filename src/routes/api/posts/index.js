@@ -14,8 +14,12 @@ posts
 
 async function getAllPosts(ctx, next) {
   try {
-    ctx.body = await Post.getAllPosts();
-    next();
+    const data = await Post.getAllPosts();
+    if (data.length) {
+      ctx.body = data;
+      ctx.status = 200;
+      next();
+    }
   } catch (e) {
     ctx.body = e;
     ctx.status = 500;
@@ -25,10 +29,12 @@ async function getAllPosts(ctx, next) {
 async function getPostById(ctx, next) {
   try {
     const { id } = ctx.request.params;
-    const post = await Post.getPostById(id);
-    ctx.body = JSON.stringify(post);
-    ctx.status = 200;
-    next();
+    const data = await Post.getPostById(id);
+    if (data) {
+      ctx.body = data;
+      ctx.status = 200;
+      next();
+    }
   } catch (e) {
     ctx.body = e;
     ctx.status = 500;
@@ -38,8 +44,12 @@ async function getPostById(ctx, next) {
 async function getPostsByCategory(ctx, next) {
   try {
     const { category } = ctx.request.params;
-    ctx.body = await Post.getPostsByCategory(category);
-    next();
+    const data = await Post.getPostsByCategory(category);
+    if (data.length) {
+      ctx.body = data;
+      ctx.status = 200;
+      next();
+    }
   } catch (e) {
     ctx.body = e;
     ctx.status = 500;
@@ -49,9 +59,12 @@ async function getPostsByCategory(ctx, next) {
 async function getPostsByAuthor(ctx, next) {
   try {
     const { author } = ctx.request.params;
-    ctx.body = await Post.getPostsByAuthor(author);
-    ctx.status = 201;
-    next();
+    const data = await Post.getPostsByAuthor(author);
+    if (data.length) {
+      ctx.body = data;
+      ctx.status = 201;
+      next();
+    }
   } catch (e) {
     ctx.body = e;
     ctx.status = 500;
@@ -62,9 +75,9 @@ async function createPost(ctx, next) {
   try {
     const post = ctx.request.body;
     if (post) {
-      const res = await Post.createPost(post);
+      const data = await Post.createPost(post);
       ctx.status = 201;
-      ctx.body = JSON.stringify(res);
+      ctx.body = JSON.stringify(data);
       next();
     }
   } catch (e) {
@@ -92,9 +105,12 @@ async function updatePost(ctx, next) {
 async function removePost(ctx, next) {
   try {
     const { id } = ctx.request.params;
-    ctx.body = await Post.removePostById(id);
-    ctx.status = 204;
-    next();
+    const data = await Post.removePostById(id);
+    if (data) {
+      ctx.body = data;
+      ctx.status = 204;
+      next();
+    }
   } catch (e) {
     ctx.body = e;
     ctx.status = 500;
