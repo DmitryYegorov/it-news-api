@@ -12,8 +12,12 @@ categories
 
 async function getAllCategories(ctx, next) {
   try {
-    ctx.body = await Category.getAllCategories();
-    next();
+    const data = await Category.getAllCategories();
+    if (data.length) {
+      ctx.body = data;
+      ctx.status = 200;
+      next();
+    }
   } catch (e) {
     ctx.body = e;
     ctx.status = 500;
@@ -23,10 +27,12 @@ async function getAllCategories(ctx, next) {
 async function getCategoryById(ctx, next) {
   try {
     const { id } = ctx.request.params;
-    const category = await Category.getUserById(id);
-    ctx.body = JSON.stringify(category);
-    ctx.status = 200;
-    next();
+    const category = await Category.getCategoryById(id);
+    if (category) {
+      ctx.body = category;
+      ctx.status = 200;
+      next();
+    }
   } catch (e) {
     ctx.body = e;
     ctx.status = 500;
@@ -36,10 +42,10 @@ async function getCategoryById(ctx, next) {
 async function createCategory(ctx, next) {
   try {
     const category = ctx.request.body;
-    if (category) {
-      const res = await Category.createCategory(category);
+    const res = await Category.createCategory(category);
+    if (res) {
+      ctx.body = res;
       ctx.status = 201;
-      ctx.body = JSON.stringify(res);
       next();
     }
   } catch (e) {
@@ -52,10 +58,10 @@ async function updateCategory(ctx, next) {
   try {
     const data = ctx.request.body;
     const { id } = ctx.request.params;
-    if (data) {
-      const res = await Category.updateCategory(id, data);
+    const res = await Category.updateCategory(id, data);
+    if (res) {
+      ctx.body = res;
       ctx.status = 200;
-      ctx.body = JSON.stringify(res);
       next();
     }
   } catch (e) {
@@ -67,9 +73,12 @@ async function updateCategory(ctx, next) {
 async function removeCategory(ctx, next) {
   try {
     const { id } = ctx.request.params;
-    ctx.body = await Category.removeCategoryById(id);
-    ctx.status = 204;
-    next();
+    const removed = await Category.removeCategoryById(id);
+    if (removed) {
+      ctx.body = removed;
+      ctx.status = 204;
+      next();
+    }
   } catch (e) {
     ctx.status = 500;
     ctx.body = e;
