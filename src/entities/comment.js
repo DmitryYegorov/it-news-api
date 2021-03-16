@@ -3,7 +3,7 @@ const Comment = require("../models/comment");
 async function getCommentsByPost(post) {
   const comments = await Comment.query()
     .where({
-      commentpost: post,
+      post,
     })
     .select();
   return comments;

@@ -1,4 +1,5 @@
 const Router = require("koa-router");
+const Subscription = require("../../../entities/subscriptions");
 
 const subscription = new Router({
   prefix: "/subscriptions",
@@ -6,32 +7,67 @@ const subscription = new Router({
 
 subscription
   .get("/", getAllSubscriptions)
-  .get("/:id", getSubscriptionById)
   .post("/", createSubscription)
-  .get("/user/:user", getSubscriptionsByUser);
+  .get("/user/:user", getSubscriptionsByUser)
+  .get("/author/:author", getSubscribers);
 
-function getAllSubscriptions(ctx, next) {
-  ctx.body = "Get all subscriptions";
-  ctx.status = 200;
-  next();
+async function getAllSubscriptions(ctx, next) {
+  try {
+    const subscriptions = await Subscription.getAllSubscriptions();
+    if (subscriptions.length) {
+      ctx.body = subscriptions;
+      ctx.status = 200;
+      next();
+    }
+  } catch (e) {
+    ctx.body = e;
+    ctx.status = 500;
+  }
 }
 
-function getSubscriptionById(ctx, next) {
-  ctx.body = "Get subscriptions by ID";
-  ctx.status = 200;
-  next();
+async function createSubscription(ctx, next) {
+  try {
+    const data = ctx.request.body;
+    const res = await Subscription.createSubscription(data);
+    if (res) {
+      ctx.body = res;
+      ctx.status = 201;
+      next();
+    }
+  } catch (e) {
+    ctx.body = e;
+    ctx.status = 500;
+  }
 }
 
-function createSubscription(ctx, next) {
-  ctx.body = "Create a subscriptions";
-  ctx.status = 201;
-  next();
+async function getSubscriptionsByUser(ctx, next) {
+  try {
+    const { user } = ctx.request.params;
+    const subscriptions = await Subscription.getSubscriptionsByUser(user);
+    if (subscriptions.length) {
+      ctx.body = subscriptions;
+      ctx.status = 200;
+      next();
+    }
+  } catch (e) {
+    ctx.body = e;
+    ctx.status = 500;
+  }
 }
 
-function getSubscriptionsByUser(ctx, next) {
-  ctx.body = "Get the subscriptions by user";
-  ctx.status = 200;
-  next();
+async function getSubscribers(ctx, next) {
+  try {
+    const { author } = ctx.request.params;
+    const subscriptions = await Subscription.getSubscribersByAuthor(author);
+    if (subscriptions.length) {
+      ctx.body = subscriptions;
+      ctx.status = 200;
+      next();
+    }
+  } catch (e) {
+    ctx.body = e;
+    ctx.status = 500;
+  }
 }
 
 module.exports = subscription;
