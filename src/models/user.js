@@ -1,7 +1,6 @@
-const { visibilityPlugin } = require("objection-visibility");
 const Model = require("./BaseModel");
 
-class UserModel extends visibilityPlugin(Model) {
+class UserModel extends Model {
   static get hidden() {
     return ["password"];
   }

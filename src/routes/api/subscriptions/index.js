@@ -9,7 +9,8 @@ subscription
   .get("/", getAllSubscriptions)
   .post("/", createSubscription)
   .get("/user/:user", getSubscriptionsByUser)
-  .get("/author/:author", getSubscribers);
+  .get("/author/:author", getSubscribers)
+  .delete("/:id", removeSubsribe);
 
 async function getAllSubscriptions(ctx, next) {
   try {
@@ -67,6 +68,21 @@ async function getSubscribers(ctx, next) {
   } catch (e) {
     ctx.body = e;
     ctx.status = 500;
+  }
+}
+
+async function removeSubsribe(ctx, next) {
+  try {
+    const { id } = ctx.request.body;
+    const removed = await Subscription.removeSubscription(id);
+    if (removed) {
+      ctx.body = removed;
+      ctx.status = 204;
+      next();
+    }
+  } catch (e) {
+    ctx.body = e;
+    ctx.status = 204;
   }
 }
 
