@@ -1,28 +1,23 @@
 const Category = require("../models/category");
 
 async function getAllCategories() {
-  const categories = await Category.query().select();
-  return categories;
+  return Category.query().select();
 }
 
 async function getCategoryById(id) {
-  const category = await Category.query().findById(id);
-  return category;
+  return Category.query().findById(id);
 }
 
 async function createCategory(post) {
-  const newCategory = Category.query().insert(post);
-  return newCategory;
+  return Category.query().insert(post);
 }
 
 async function updateCategory(id, data) {
-  const updated = await Category.query().findById(id).patch(data);
-  return updated;
+  return Category.query().findById(id).patch(data);
 }
 
 async function removeCategoryById(id) {
-  const res = await Category.query().findById(id).delete();
-  return res;
+  return Category.query().findById(id).delete();
 }
 
 module.exports = {

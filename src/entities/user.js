@@ -1,28 +1,23 @@
 const User = require("../models/user");
 
 async function createUser(user) {
-  const newUser = await User.query().insert(user);
-  return newUser;
+  return User.query().insert(user);
 }
 
 async function getUserById(id) {
-  const user = await User.query().findById(id);
-  return user;
+  return User.query().findById(id);
 }
 
 async function getAllUsers() {
-  const users = await User.query().select();
-  return users;
+  return User.query().select();
 }
 
 async function updateUser(id, data) {
-  const updated = await User.query().findById(id).patch(data);
-  return updated;
+  return User.query().findById(id).patch(data);
 }
 
 async function removeUserById(id) {
-  const res = await User.query().findById(id).delete();
-  return res;
+  return User.query().findById(id).delete();
 }
 
 module.exports = {

@@ -11,36 +11,31 @@ async function getPostById(id) {
 }
 
 async function createPost(post) {
-  const newPost = Post.query().insert(post);
-  return newPost;
+  return Post.query().insert(post);
 }
 
 async function updatePost(id, data) {
-  const updated = await Post.query().findById(id).patch(data);
-  return updated;
+  return Post.query().findById(id).patch(data);
 }
 
 async function removePostById(id) {
-  const res = await Post.query().findById(id).delete();
-  return res;
+  return Post.query().findById(id).delete();
 }
 
-async function getPostsByCategory(category) {
-  const posts = await Post.query()
+async function getPostsByCategory(categoryId) {
+  return Post.query()
     .where({
-      postcategory: category,
+      categoryId,
     })
     .select();
-  return posts;
 }
 
 async function getPostsByAuthor(author) {
-  const posts = await Post.query()
+  return Post.query()
     .where({
-      postauthor: author,
+      author,
     })
     .select();
-  return posts;
 }
 
 module.exports = {
