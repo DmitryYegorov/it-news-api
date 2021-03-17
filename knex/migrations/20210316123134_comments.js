@@ -10,7 +10,7 @@ exports.up = function (knex) {
       .onDelete("SET NULL");
     table.text("text").notNullable();
     table
-      .integer("post")
+      .integer("postId")
       .notNullable()
       .index()
       .references("id")

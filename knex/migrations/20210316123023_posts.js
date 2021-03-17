@@ -2,7 +2,7 @@ exports.up = function (knex) {
   return knex.schema.createTable("posts", function (table) {
     table.increments("id").primary().notNullable();
     table
-      .integer("category")
+      .integer("categoryId")
       .notNullable()
       .index()
       .references("id")

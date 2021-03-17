@@ -1,9 +1,9 @@
 const Comment = require("../models/comment");
 
-async function getCommentsByPost(post) {
+async function getCommentsByPost(postId) {
   const comments = await Comment.query()
     .where({
-      post,
+      postId,
     })
     .select();
   return comments;
