@@ -1,14 +1,16 @@
 const Router = require("koa-router");
 const Comment = require("../../../entities/comment");
 
-const comments = new Router();
+const comments = new Router({
+  prefix: "/comments",
+});
 
 comments
-  .get("/comments/:id", getCommentById)
-  .get("/comments/post/:post", getCommentsByPost)
-  .post("/comments", createComment)
-  .put("/comments/:id", updateComment)
-  .delete("/comments/:id", removeComment);
+  .get("/:id", getCommentById)
+  .get("/post/:post", getCommentsByPost)
+  .post("/", createComment)
+  .put("/:id", updateComment)
+  .delete("/:id", removeComment);
 
 async function getCommentById(ctx, next) {
   try {

@@ -1,14 +1,16 @@
 const Router = require("koa-router");
 const Category = require("../../../entities/category");
 
-const categories = new Router();
+const categories = new Router({
+  prefix: "/comments",
+});
 
 categories
-  .get("/categories", getAllCategories)
-  .get("/categories/:id", getCategoryById)
-  .post("/categories", createCategory)
-  .put("/categories/:id", updateCategory)
-  .delete("/categories/:id", removeCategory);
+  .get("/", getAllCategories)
+  .get("/:id", getCategoryById)
+  .post("/", createCategory)
+  .put("/:id", updateCategory)
+  .delete("/:id", removeCategory);
 
 async function getAllCategories(ctx, next) {
   try {

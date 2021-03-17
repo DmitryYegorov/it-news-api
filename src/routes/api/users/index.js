@@ -1,14 +1,16 @@
 const Router = require("koa-router");
 const User = require("../../../entities/user");
 
-const users = new Router();
+const users = new Router({
+  prefix: "users",
+});
 
 users
-  .get("/users", getAllUsers)
-  .get("/users/:id", getUserById)
-  .post("/users", createUser)
-  .put("/users/:id", updateUser)
-  .delete("/users/:id", removeUser);
+  .get("/", getAllUsers)
+  .get("/:id", getUserById)
+  .post("/", createUser)
+  .put("/:id", updateUser)
+  .delete("/:id", removeUser);
 
 async function getAllUsers(ctx, next) {
   try {

@@ -1,16 +1,18 @@
 const Router = require("koa-router");
 const Post = require("../../../entities/post");
 
-const posts = new Router();
+const posts = new Router({
+  prefix: "/posts",
+});
 
 posts
-  .get("/posts", getAllPosts)
-  .get("/posts/:id", getPostById)
-  .get("/posts/category/:category", getPostsByCategory)
-  .get("/posts/author/:author", getPostsByAuthor)
-  .post("/posts", createPost)
-  .put("/posts/:id", updatePost)
-  .delete("/posts/:id", removePost);
+  .get("/", getAllPosts)
+  .get("/:id", getPostById)
+  .get("/category/:category", getPostsByCategory)
+  .get("/author/:author", getPostsByAuthor)
+  .post("/", createPost)
+  .put("/:id", updatePost)
+  .delete("/:id", removePost);
 
 async function getAllPosts(ctx, next) {
   try {
