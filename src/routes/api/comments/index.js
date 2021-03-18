@@ -23,7 +23,7 @@ async function getCommentById(ctx, next) {
     }
   } catch (e) {
     ctx.body = e;
-    ctx.status = 500;
+    ctx.status = 400;
   }
 }
 
@@ -38,7 +38,7 @@ async function getCommentsByPost(ctx, next) {
     }
   } catch (e) {
     ctx.body = e;
-    ctx.status = 500;
+    ctx.status = 400;
   }
 }
 
@@ -53,7 +53,7 @@ async function createComment(ctx, next) {
     }
   } catch (e) {
     ctx.body = e;
-    ctx.status = 500;
+    ctx.status = 400;
   }
 }
 
@@ -68,7 +68,7 @@ async function updateComment(ctx, next) {
       next();
     }
   } catch (e) {
-    ctx.status = 500;
+    ctx.status = 400;
     ctx.body = e;
   }
 }
@@ -84,7 +84,7 @@ async function removeComment(ctx, next) {
     }
   } catch (e) {
     ctx.body = e;
-    ctx.status = 500;
+    ctx.status = 400;
   }
 }
 

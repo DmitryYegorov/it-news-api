@@ -22,7 +22,7 @@ async function getAllUsers(ctx, next) {
     }
   } catch (e) {
     ctx.body = e;
-    ctx.status = 500;
+    ctx.status = 400;
   }
 }
 
@@ -37,7 +37,7 @@ async function getUserById(ctx, next) {
     }
   } catch (e) {
     ctx.body = e;
-    ctx.status = 500;
+    ctx.status = 400;
   }
 }
 
@@ -51,7 +51,7 @@ async function createUser(ctx, next) {
       next();
     }
   } catch (e) {
-    ctx.status = 500;
+    ctx.status = 400;
     ctx.body = e;
   }
 }
@@ -67,7 +67,7 @@ async function updateUser(ctx, next) {
       next();
     }
   } catch (e) {
-    ctx.status = 500;
+    ctx.status = 400;
     ctx.body = e;
   }
 }
@@ -82,7 +82,7 @@ async function removeUser(ctx, next) {
       next();
     }
   } catch (e) {
-    ctx.status = 500;
+    ctx.status = 400;
     ctx.body = e;
   }
 }

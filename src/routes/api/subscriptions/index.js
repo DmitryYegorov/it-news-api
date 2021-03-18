@@ -22,7 +22,7 @@ async function getAllSubscriptions(ctx, next) {
     }
   } catch (e) {
     ctx.body = e;
-    ctx.status = 500;
+    ctx.status = 400;
   }
 }
 
@@ -37,7 +37,7 @@ async function createSubscription(ctx, next) {
     }
   } catch (e) {
     ctx.body = e;
-    ctx.status = 500;
+    ctx.status = 400;
   }
 }
 
@@ -52,7 +52,7 @@ async function getSubscriptionsByUser(ctx, next) {
     }
   } catch (e) {
     ctx.body = e;
-    ctx.status = 500;
+    ctx.status = 400;
   }
 }
 
@@ -67,7 +67,7 @@ async function getSubscribers(ctx, next) {
     }
   } catch (e) {
     ctx.body = e;
-    ctx.status = 500;
+    ctx.status = 400;
   }
 }
 
@@ -82,7 +82,7 @@ async function removeSubscribe(ctx, next) {
     }
   } catch (e) {
     ctx.body = e;
-    ctx.status = 204;
+    ctx.status = 400;
   }
 }
 

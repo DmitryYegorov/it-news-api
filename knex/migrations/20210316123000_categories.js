@@ -2,8 +2,8 @@ exports.up = function (knex) {
   return knex.schema.createTable("categories", function (table) {
     table.increments("id").primary().notNullable();
     table.string("name").notNullable().unique();
-    table.dateTime("created_at").notNullable();
-    table.dateTime("updated_at");
+    table.dateTime("createdAt").notNullable();
+    table.dateTime("updatedAt");
   });
 };
 

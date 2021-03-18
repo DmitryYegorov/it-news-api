@@ -15,6 +15,8 @@ exports.up = function (knex) {
       .references("id")
       .inTable("users")
       .onDelete("SET NULL");
+    table.dateTime("createdAt").notNullable();
+    table.dateTime("updatedAt");
   });
 };
 

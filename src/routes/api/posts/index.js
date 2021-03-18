@@ -24,7 +24,7 @@ async function getAllPosts(ctx, next) {
     }
   } catch (e) {
     ctx.body = e;
-    ctx.status = 500;
+    ctx.status = 400;
   }
 }
 
@@ -39,7 +39,7 @@ async function getPostById(ctx, next) {
     }
   } catch (e) {
     ctx.body = e;
-    ctx.status = 500;
+    ctx.status = 400;
   }
 }
 
@@ -54,7 +54,7 @@ async function getPostsByCategory(ctx, next) {
     }
   } catch (e) {
     ctx.body = e;
-    ctx.status = 500;
+    ctx.status = 400;
   }
 }
 
@@ -69,7 +69,7 @@ async function getPostsByAuthor(ctx, next) {
     }
   } catch (e) {
     ctx.body = e;
-    ctx.status = 500;
+    ctx.status = 400;
   }
 }
 
@@ -84,7 +84,7 @@ async function createPost(ctx, next) {
     }
   } catch (e) {
     ctx.body = e;
-    ctx.status = 500;
+    ctx.status = 400;
   }
 }
 
@@ -100,7 +100,7 @@ async function updatePost(ctx, next) {
     }
   } catch (e) {
     ctx.body = e;
-    ctx.status = 500;
+    ctx.status = 400;
   }
 }
 
@@ -115,7 +115,7 @@ async function removePost(ctx, next) {
     }
   } catch (e) {
     ctx.body = e;
-    ctx.status = 500;
+    ctx.status = 400;
   }
 }
 
