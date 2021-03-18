@@ -1,5 +1,10 @@
 const Router = require("koa-router");
 const Post = require("../../../entities/post");
+const {
+  AddPostMiddleware,
+  UpdatePostMiddleware,
+  validate,
+} = require("./validate");
 
 const posts = new Router({
   prefix: "/posts",
@@ -10,8 +15,8 @@ posts
   .get("/:id", getPostById)
   .get("/category/:category", getPostsByCategory)
   .get("/author/:author", getPostsByAuthor)
-  .post("/", createPost)
-  .put("/:id", updatePost)
+  .post("/", createPost, validate(AddPostMiddleware))
+  .put("/:id", updatePost, validate(UpdatePostMiddleware))
   .delete("/:id", removePost);
 
 async function getAllPosts(ctx, next) {
