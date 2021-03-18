@@ -1,9 +1,5 @@
 const Subscription = require("../models/subscription");
 
-async function getAllSubscriptions() {
-  return Subscription.query().select();
-}
-
 async function getSubscriptionsByUser(userId) {
   return Subscription.query().select({
     where: {
@@ -31,7 +27,6 @@ async function removeSubscription(id) {
 module.exports = {
   createSubscription,
   removeSubscription,
-  getAllSubscriptions,
   getSubscriptionsByUser,
   getSubscribersByAuthor,
 };
