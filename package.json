@@ -16,7 +16,8 @@
     "objection-timestamps": "^4.0.0",
     "objection-visibility": "^1.1.0",
     "pg": "^8.5.1",
-    "pm2": "^4.5.5"
+    "pm2": "^4.5.5",
+    "yup": "^0.32.9"
   },
   "devDependencies": {
     "eslint": "^7.21.0",

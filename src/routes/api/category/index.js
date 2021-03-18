@@ -2,7 +2,7 @@ const Router = require("koa-router");
 const Category = require("../../../entities/category");
 
 const categories = new Router({
-  prefix: "/comments",
+  prefix: "/categories",
 });
 
 categories
