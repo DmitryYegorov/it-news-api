@@ -3,10 +3,13 @@ const koaCors = require("@koa/cors");
 const koaJson = require("koa-json");
 const koaLogger = require("koa-logger");
 const koaBodyParser = require("koa-bodyparser");
+const dbSetup = require("./knex/db-setup");
+
+dbSetup();
 
 const app = new Koa();
 const { PORT } = process.env;
-const api = require("./routes/api");
+const api = require("./src/routes/api");
 
 app.use(
   koaCors({

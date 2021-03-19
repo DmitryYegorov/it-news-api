@@ -10,6 +10,8 @@
   },
   "rules": {
     "prettier/prettier": "error",
-    "no-use-before-define": ["error", {"functions":  false}]
+    "no-use-before-define": ["error", {"functions":  false}],
+    "no-unused-vars": ["error", { "vars": "all", "args": "after-used", "ignoreRestSiblings": false }],
+    "no-shadow": ["error", { "builtinGlobals": false, "hoist": "functions", "allow": ["done"] }]
   }
 }
