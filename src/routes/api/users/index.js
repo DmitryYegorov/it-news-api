@@ -13,37 +13,22 @@ const users = new Router({
 users
   .get("/", getAllUsers)
   .get("/:id", getUserById)
-  .post("/", createUser, validate(AddUserMiddleware))
-  .put("/:id", updateUser, validate(UpdateUserMiddleware))
+  .post(validate(AddUserMiddleware), "/", createUser)
+  .put(validate(UpdateUserMiddleware), "/:id", updateUser)
   .delete("/:id", removeUser);
 
 async function getAllUsers(ctx, next) {
-  try {
-    const data = await User.getAllUsers();
-    if (data.length) {
-      ctx.body = data;
-      ctx.status = 200;
-      next();
-    }
-  } catch (e) {
-    ctx.body = e;
-    ctx.status = 400;
-  }
+  const data = await User.getAllUsers();
+  ctx.body = data;
+  ctx.status = 200;
+  next();
 }
 
 async function getUserById(ctx, next) {
-  try {
-    const { id } = ctx.request.params;
-    const data = await User.getUserById(id);
-    if (data) {
-      ctx.body = data;
-      ctx.status = 200;
-      next();
-    }
-  } catch (e) {
-    ctx.body = e;
-    ctx.status = 400;
-  }
+  const { id } = ctx.request.params;
+  ctx.body = await User.getUserById(id);
+  ctx.status = 200;
+  next();
 }
 
 async function createUser(ctx, next) {
@@ -62,34 +47,18 @@ async function createUser(ctx, next) {
 }
 
 async function updateUser(ctx, next) {
-  try {
-    const data = ctx.request.body;
-    const { id } = ctx.request.params;
-    const res = await User.updateUser(id, data);
-    if (res) {
-      ctx.status = 200;
-      ctx.body = res;
-      next();
-    }
-  } catch (e) {
-    ctx.status = 400;
-    ctx.body = e;
-  }
+  const data = ctx.request.body;
+  const { id } = ctx.request.params;
+  ctx.body = await User.updateUser(id, data);
+  ctx.status = 200;
+  next();
 }
 
 async function removeUser(ctx, next) {
-  try {
-    const { id } = ctx.request.params;
-    const data = await User.removeUserById(id);
-    if (data) {
-      ctx.body = data;
-      ctx.status = 204;
-      next();
-    }
-  } catch (e) {
-    ctx.status = 400;
-    ctx.body = e;
-  }
+  const { id } = ctx.request.params;
+  ctx.body = await User.removeUserById(id);
+  ctx.status = 204;
+  next();
 }
 
 module.exports = users;

@@ -7,9 +7,9 @@ const AddUserMiddleware = yup.object().shape({
 });
 
 const UpdateUserMiddleware = yup.object().shape({
-  name: yup.string().required(),
-  email: yup.string().email().required(),
-  password: yup.string().min(8).max(24).required(),
+  name: yup.string(),
+  email: yup.string().email(),
+  password: yup.string().min(8).max(24),
 });
 
 function validate(schema) {

@@ -1,10 +1,15 @@
 const User = require("../models/user");
+const ErrorService = require("../middleware/error/errorService");
 
 async function createUser(user) {
   return User.query().insert(user);
 }
 
 async function getUserById(id) {
+  const result = await User.query().findById(id);
+  if (!result) {
+    throw ErrorService.errorThrow(404);
+  }
   return User.query().findById(id);
 }
 
@@ -13,7 +18,11 @@ async function getAllUsers() {
 }
 
 async function updateUser(id, data) {
-  return User.query().findById(id).patch(data);
+  const result = await User.query().findById(id);
+  if (!result) {
+    throw ErrorService.errorThrow(404);
+  }
+  User.query().update(data).findById(id);
 }
 
 async function removeUserById(id) {
