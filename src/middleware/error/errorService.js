@@ -8,27 +8,26 @@ function errorHandler() {
     try {
       await next();
     } catch (e) {
-      if (e instanceof Error400) {
-        ctx.body = e.message || "Invalid data sent";
-        ctx.status = e.code || 400;
-      } else if (e instanceof Error404) {
-        ctx.body = e.message || "Bad request message";
-        ctx.status = e.code || 404;
-      } else {
-        ctx.body = e.message;
-        ctx.status = e.code;
-      }
+      ctx.body = e.message;
+      ctx.status = e.code;
     }
   };
 }
 
 function errorThrow(code) {
-  if (code === 400) {
-    throw Error400(code, "Enter valid data");
-  } else if (code === 404) {
-    throw Error404(code, "Your data not found");
-  } else {
-    throw new Error500(500, "Bad, Bab, very bad");
+  switch (code) {
+    case 400:
+      throw new Error400(400, "Invalid data sent");
+      // eslint-disable-next-line no-unreachable
+      break;
+    case 404:
+      throw new Error404(404, "Data blin not found");
+      // eslint-disable-next-line no-unreachable
+      break;
+    default:
+      throw new Error500(500, "Server error");
+      // eslint-disable-next-line no-unreachable
+      break;
   }
 }
 

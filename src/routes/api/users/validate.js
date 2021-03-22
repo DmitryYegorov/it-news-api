@@ -1,15 +1,17 @@
 const yup = require("yup");
+const Error404 = require("../../../middleware/error/error404");
+const ErrorService = require("../../../middleware/error/errorService");
 
 const AddUserMiddleware = yup.object().shape({
-  name: yup.string().required(),
-  email: yup.string().email().required(),
-  password: yup.string().min(8).max(24).required(),
+  name: yup.string().trim().required(),
+  email: yup.string().trim().email().required(),
+  password: yup.string().trim().min(8).max(24).required(),
 });
 
 const UpdateUserMiddleware = yup.object().shape({
-  name: yup.string(),
-  email: yup.string().email(),
-  password: yup.string().min(8).max(24),
+  name: yup.string().trim(),
+  email: yup.string().trim().email(),
+  password: yup.string().trim().min(8).max(24),
 });
 
 function validate(schema) {
@@ -19,7 +21,10 @@ function validate(schema) {
       await schema.validate(ctx.request.body);
       next();
     } catch (e) {
-      throw e;
+      if (e instanceof Error404) {
+        throw ErrorService.errorThrow(404);
+      }
+      throw ErrorService.errorThrow(400);
     }
   };
 }

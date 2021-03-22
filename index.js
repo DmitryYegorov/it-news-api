@@ -4,7 +4,7 @@ const koaJson = require("koa-json");
 const koaLogger = require("koa-logger");
 const koaBodyParser = require("koa-bodyparser");
 const dbSetup = require("./knex/db-setup");
-const errorService = require("./src/middleware/error/errorService");
+const { errorHandler } = require("./src/middleware/error/errorService");
 
 dbSetup();
 
@@ -17,7 +17,7 @@ app.use(
     origin: "*",
   })
 );
-app.use(errorService.errorHandler());
+app.use(errorHandler());
 app.use(koaLogger());
 app.use(koaJson());
 app.use(koaBodyParser());

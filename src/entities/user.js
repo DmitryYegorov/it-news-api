@@ -2,13 +2,22 @@ const User = require("../models/user");
 const ErrorService = require("../middleware/error/errorService");
 
 async function createUser(user) {
-  return User.query().insert(user);
+  const result = await User.query()
+    .where({
+      email: user.email,
+    })
+    .select()
+    .count();
+  if (!result) {
+    throw ErrorService.errorThrow(400);
+  }
+  User.query().insert(user);
 }
 
 async function getUserById(id) {
   const result = await User.query().findById(id);
   if (!result) {
-    throw ErrorService.errorThrow(404);
+    throw ErrorService.errorThrow(400);
   }
   return User.query().findById(id);
 }
@@ -22,7 +31,10 @@ async function updateUser(id, data) {
   if (!result) {
     throw ErrorService.errorThrow(404);
   }
-  User.query().update(data).findById(id);
+  const name = data.name || result.name;
+  const email = data.email || result.email;
+  const password = data.password || result.password;
+  await User.query().update({ name, email, password }).findById(id);
 }
 
 async function removeUserById(id) {

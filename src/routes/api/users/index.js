@@ -13,52 +13,39 @@ const users = new Router({
 users
   .get("/", getAllUsers)
   .get("/:id", getUserById)
-  .post(validate(AddUserMiddleware), "/", createUser)
-  .put(validate(UpdateUserMiddleware), "/:id", updateUser)
+  .post("/", validate(AddUserMiddleware), createUser)
+  .put("/:id", validate(UpdateUserMiddleware), updateUser)
   .delete("/:id", removeUser);
 
-async function getAllUsers(ctx, next) {
+async function getAllUsers(ctx) {
   const data = await User.getAllUsers();
-  ctx.body = data;
   ctx.status = 200;
-  next();
+  ctx.body = data;
 }
 
-async function getUserById(ctx, next) {
+async function getUserById(ctx) {
   const { id } = ctx.request.params;
   ctx.body = await User.getUserById(id);
   ctx.status = 200;
-  next();
 }
 
-async function createUser(ctx, next) {
-  try {
-    const user = ctx.request.body;
-    if (user) {
-      const data = await User.createUser(user);
-      ctx.status = 201;
-      ctx.body = data;
-      next();
-    }
-  } catch (e) {
-    ctx.status = 400;
-    ctx.body = e;
-  }
+async function createUser(ctx) {
+  const user = ctx.request.body;
+  await User.createUser(user);
+  ctx.status = 201;
 }
 
-async function updateUser(ctx, next) {
+async function updateUser(ctx) {
   const data = ctx.request.body;
   const { id } = ctx.request.params;
   ctx.body = await User.updateUser(id, data);
   ctx.status = 200;
-  next();
 }
 
-async function removeUser(ctx, next) {
+async function removeUser(ctx) {
   const { id } = ctx.request.params;
   ctx.body = await User.removeUserById(id);
   ctx.status = 204;
-  next();
 }
 
 module.exports = users;
