@@ -22,7 +22,7 @@ function validate(schema) {
       await next();
     } catch (e) {
       if (e instanceof Error404) {
-        throw ErrorService.errorThrow(400);
+        throw ErrorService.errorThrow(404);
       }
       throw ErrorService.errorThrow(400);
     }
