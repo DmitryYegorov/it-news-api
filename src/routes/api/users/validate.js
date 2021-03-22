@@ -19,10 +19,10 @@ function validate(schema) {
     // eslint-disable-next-line no-useless-catch
     try {
       await schema.validate(ctx.request.body);
-      next();
+      await next();
     } catch (e) {
       if (e instanceof Error404) {
-        throw ErrorService.errorThrow(404);
+        throw ErrorService.errorThrow(400);
       }
       throw ErrorService.errorThrow(400);
     }
