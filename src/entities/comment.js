@@ -1,6 +1,12 @@
 const Comment = require("../models/comment");
+const Post = require("../models/post");
+const ErrorService = require("../middleware/error/errorService");
 
 async function getCommentsByPost(postId) {
+  const post = await Post.query().findById(postId);
+  if (!post) {
+    throw ErrorService.errorThrow(404);
+  }
   return Comment.query()
     .where({
       postId,
@@ -9,7 +15,11 @@ async function getCommentsByPost(postId) {
 }
 
 async function getCommentById(id) {
-  return Comment.query().findById(id);
+  const comment = await Comment.query().findById(id);
+  if (!comment) {
+    throw ErrorService.errorThrow(404);
+  }
+  return comment;
 }
 
 async function createComment(data) {
@@ -17,10 +27,18 @@ async function createComment(data) {
 }
 
 async function updateComment(id, data) {
+  const comment = await Comment.query().findById(id);
+  if (!comment) {
+    throw ErrorService.errorThrow(404);
+  }
   return Comment.query().findById(id).patch(data);
 }
 
 async function removeComment(id) {
+  const comment = await Comment.query().findById(id);
+  if (!comment) {
+    throw ErrorService.errorThrow(404);
+  }
   return Comment.query().findById(id).delete();
 }
 
