@@ -1,8 +1,8 @@
 class Error400 extends Error {
-  constructor(code) {
+  constructor() {
     super();
     this.message = "Invalid data";
-    this.code = code;
+    this.code = 400;
   }
 }
 

@@ -1,7 +1,7 @@
 class Error500 extends Error {
-  constructor(code) {
+  constructor() {
     super();
-    this.code = code;
+    this.code = 500;
     this.message = "Server error";
   }
 }

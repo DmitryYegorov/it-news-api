@@ -21,9 +21,9 @@ function validate(schema) {
       await next();
     } catch (e) {
       if (e instanceof Error404) {
-        throw new Error404(404);
+        throw new Error404();
       }
-      throw new Error400(400);
+      throw new Error400();
     }
   };
 }
