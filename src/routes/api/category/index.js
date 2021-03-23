@@ -12,79 +12,34 @@ categories
   .put("/:id", updateCategory)
   .delete("/:id", removeCategory);
 
-async function getAllCategories(ctx, next) {
-  try {
-    const data = await Category.getAllCategories();
-    if (data.length) {
-      ctx.body = data;
-      ctx.status = 200;
-      next();
-    }
-  } catch (e) {
-    ctx.body = e;
-    ctx.status = 400;
-  }
+async function getAllCategories(ctx) {
+  ctx.body = await Category.getAllCategories();
+  ctx.status = 200;
 }
 
-async function getCategoryById(ctx, next) {
-  try {
-    const { id } = ctx.request.params;
-    const category = await Category.getCategoryById(id);
-    if (category) {
-      ctx.body = category;
-      ctx.status = 200;
-      next();
-    }
-  } catch (e) {
-    ctx.body = e;
-    ctx.status = 400;
-  }
+async function getCategoryById(ctx) {
+  const { id } = ctx.request.params;
+  ctx.body = await Category.getCategoryById(id);
+  ctx.status = 200;
 }
 
-async function createCategory(ctx, next) {
-  try {
-    const category = ctx.request.body;
-    const res = await Category.createCategory(category);
-    if (res) {
-      ctx.body = res;
-      ctx.status = 201;
-      next();
-    }
-  } catch (e) {
-    ctx.status = 400;
-    ctx.body = e;
-  }
+async function createCategory(ctx) {
+  const category = ctx.request.body;
+  ctx.body = await Category.createCategory(category);
+  ctx.status = 201;
 }
 
-async function updateCategory(ctx, next) {
-  try {
-    const data = ctx.request.body;
-    const { id } = ctx.request.params;
-    const res = await Category.updateCategory(id, data);
-    if (res) {
-      ctx.body = res;
-      ctx.status = 200;
-      next();
-    }
-  } catch (e) {
-    ctx.status = 400;
-    ctx.body = e;
-  }
+async function updateCategory(ctx) {
+  const data = ctx.request.body;
+  const { id } = ctx.request.params;
+  ctx.body = await Category.updateCategory(id, data);
+  ctx.status = 200;
 }
 
-async function removeCategory(ctx, next) {
-  try {
-    const { id } = ctx.request.params;
-    const removed = await Category.removeCategoryById(id);
-    if (removed) {
-      ctx.body = removed;
-      ctx.status = 204;
-      next();
-    }
-  } catch (e) {
-    ctx.status = 400;
-    ctx.body = e;
-  }
+async function removeCategory(ctx) {
+  const { id } = ctx.request.params;
+  ctx.body = await Category.removeCategoryById(id);
+  ctx.status = 204;
 }
 
 module.exports = categories;
