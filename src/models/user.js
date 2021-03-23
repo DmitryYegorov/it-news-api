@@ -13,22 +13,6 @@ class UserModel extends Model {
     return "id";
   }
 
-  static get nameColumn() {
-    return "name";
-  }
-
-  static get emailColumn() {
-    return "email";
-  }
-
-  static get passwordColumn() {
-    return "password";
-  }
-
-  static get timestamp() {
-    return true;
-  }
-
   static get jsonSchema() {
     return {
       type: "object",

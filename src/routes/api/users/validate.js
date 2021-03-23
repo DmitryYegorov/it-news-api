@@ -1,6 +1,6 @@
 const yup = require("yup");
 const Error404 = require("../../../middleware/error/error404");
-const ErrorService = require("../../../middleware/error/errorService");
+const Error400 = require("../../../middleware/error/error400");
 
 const AddUserMiddleware = yup.object().shape({
   name: yup.string().trim().required(),
@@ -11,7 +11,6 @@ const AddUserMiddleware = yup.object().shape({
 const UpdateUserMiddleware = yup.object().shape({
   name: yup.string().trim(),
   email: yup.string().trim().email(),
-  password: yup.string().trim().min(8).max(24),
 });
 
 function validate(schema) {
@@ -22,9 +21,9 @@ function validate(schema) {
       await next();
     } catch (e) {
       if (e instanceof Error404) {
-        throw ErrorService.errorThrow(404);
+        throw new Error404(404);
       }
-      throw ErrorService.errorThrow(400);
+      throw new Error400(400);
     }
   };
 }

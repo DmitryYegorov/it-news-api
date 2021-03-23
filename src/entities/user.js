@@ -33,8 +33,7 @@ async function updateUser(id, data) {
   }
   const name = data.name || result.name;
   const email = data.email || result.email;
-  const password = data.password || result.password;
-  await User.query().update({ name, email, password }).findById(id);
+  await User.query().update({ name, email }).findById(id);
 }
 
 async function removeUserById(id) {

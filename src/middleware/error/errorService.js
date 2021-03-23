@@ -17,15 +17,15 @@ function errorHandler() {
 function errorThrow(code) {
   switch (code) {
     case 400:
-      throw new Error400(400, "Invalid data sent");
+      throw new Error400(400);
       // eslint-disable-next-line no-unreachable
       break;
     case 404:
-      throw new Error404(404, "Data blin not found");
+      throw new Error404(404);
       // eslint-disable-next-line no-unreachable
       break;
     default:
-      throw new Error500(500, "Server error");
+      throw new Error500(500);
       // eslint-disable-next-line no-unreachable
       break;
   }
