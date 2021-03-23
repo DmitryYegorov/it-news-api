@@ -1,10 +1,6 @@
 const Router = require("koa-router");
 const User = require("../../../entities/user");
-const {
-  AddUserMiddleware,
-  UpdateUserMiddleware,
-  validate,
-} = require("./validate");
+const { UpdateUserMiddleware, validate } = require("./validate");
 
 const users = new Router({
   prefix: "/users",
@@ -13,7 +9,6 @@ const users = new Router({
 users
   .get("/", getAllUsers)
   .get("/:id", getUserById)
-  .post("/", createUser, validate(AddUserMiddleware))
   .put("/:id", updateUser, validate(UpdateUserMiddleware))
   .delete("/:id", removeUser);
 
@@ -43,21 +38,6 @@ async function getUserById(ctx, next) {
   } catch (e) {
     ctx.body = e;
     ctx.status = 400;
-  }
-}
-
-async function createUser(ctx, next) {
-  try {
-    const user = ctx.request.body;
-    if (user) {
-      const data = await User.createUser(user);
-      ctx.status = 201;
-      ctx.body = data;
-      next();
-    }
-  } catch (e) {
-    ctx.status = 400;
-    ctx.body = e;
   }
 }
 
