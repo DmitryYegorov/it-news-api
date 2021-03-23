@@ -1,5 +1,6 @@
 const passport = require("koa-passport");
-const LocalStrategy = require("koa-passport").Strategy;
+const LocalStrategy = require("passport-local").Strategy;
+const bcrypt = require("bcryptjs");
 const User = require("../models/user");
 
 const options = {};
@@ -22,7 +23,7 @@ passport.use(
         if (!user) {
           return done(null, false);
         }
-        if (password === user.password) {
+        if (comparePassword(password, user.password)) {
           return done(null, user);
         }
         return done(null, false);
@@ -30,3 +31,7 @@ passport.use(
       .catch((err) => done(err));
   })
 );
+
+function comparePassword(userPassword, databasePassword) {
+  return bcrypt.compareSync(userPassword, databasePassword);
+}

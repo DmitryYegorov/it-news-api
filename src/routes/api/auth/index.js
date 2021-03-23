@@ -1,5 +1,6 @@
 const Router = require("koa-router");
 const passport = require("koa-passport");
+// const bcrypt = require("bcryptjs"); move to entity
 const User = require("../../../entities/user");
 const { AddUserMiddleware, validate } = require("../users/validate");
 
@@ -20,6 +21,8 @@ async function logout(ctx) {
 
 async function createUser(ctx) {
   const user = ctx.request.body;
+  // const salt = bcrypt.genSaltSync(); move to entity
+  // const hash = bcrypt.hashSync(user.password, salt);
   const data = await User.createUser(user);
   ctx.status = 201;
   ctx.body = data;
