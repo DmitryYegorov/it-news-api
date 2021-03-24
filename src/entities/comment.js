@@ -1,11 +1,11 @@
 const Comment = require("../models/comment");
 const Post = require("../models/post");
-const ErrorService = require("../middleware/error/errorService");
+const Error404 = require("../middleware/error/error404");
 
 async function getCommentsByPost(postId) {
   const post = await Post.query().findById(postId);
   if (!post) {
-    throw ErrorService.errorThrow(404);
+    throw new Error404("Post not exists");
   }
   return Comment.query()
     .where({
@@ -17,7 +17,7 @@ async function getCommentsByPost(postId) {
 async function getCommentById(id) {
   const comment = await Comment.query().findById(id);
   if (!comment) {
-    throw ErrorService.errorThrow(404);
+    throw new Error404("Comment not exists");
   }
   return comment;
 }
@@ -29,7 +29,7 @@ async function createComment(data) {
 async function updateComment(id, data) {
   const comment = await Comment.query().findById(id);
   if (!comment) {
-    throw ErrorService.errorThrow(404);
+    throw new Error404("Comment not exists");
   }
   return Comment.query().findById(id).patch(data);
 }
@@ -37,7 +37,7 @@ async function updateComment(id, data) {
 async function removeComment(id) {
   const comment = await Comment.query().findById(id);
   if (!comment) {
-    throw ErrorService.errorThrow(404);
+    throw new Error404("Comment not exists");
   }
   return Comment.query().findById(id).delete();
 }

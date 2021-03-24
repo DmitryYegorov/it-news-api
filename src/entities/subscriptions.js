@@ -1,12 +1,12 @@
 import * as User from "koa";
 
 const Subscription = require("../models/subscription");
-const ErrorService = require("../middleware/error/errorService");
+const Error404 = require("../middleware/error/error404");
 
 async function getSubscriptionsByUser(userId) {
   const result = await User.query().findById(userId);
   if (!result) {
-    throw ErrorService.errorThrow(404);
+    throw new Error404();
   }
   return Subscription.query().select({
     where: {
@@ -18,7 +18,7 @@ async function getSubscriptionsByUser(userId) {
 async function getSubscribersByAuthor(userId) {
   const result = await User.query().findById(userId);
   if (!result) {
-    throw ErrorService.errorThrow(404);
+    throw new Error404();
   }
   return Subscription.query().select({
     where: {
@@ -34,7 +34,7 @@ async function createSubscription(data) {
 async function removeSubscription(id) {
   const result = await Subscription.query().findById(id);
   if (!result) {
-    throw ErrorService.errorThrow(404);
+    throw new Error404();
   }
   return Subscription.query().findById(id).delete();
 }

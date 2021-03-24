@@ -1,5 +1,5 @@
 const Category = require("../models/category");
-const ErrorService = require("../middleware/error/errorService");
+const Error404 = require("../middleware/error/error404");
 
 async function getAllCategories() {
   return Category.query().select();
@@ -8,7 +8,7 @@ async function getAllCategories() {
 async function getCategoryById(id) {
   const category = await Category.query().findById(id);
   if (!category) {
-    throw ErrorService.errorThrow(404);
+    throw new Error404();
   }
   return Category.query().findById(id);
 }
@@ -20,7 +20,7 @@ async function createCategory(post) {
 async function updateCategory(id, data) {
   const category = await Category.query().findById(id);
   if (!category) {
-    throw ErrorService.errorThrow(404);
+    throw new Error404();
   }
   return Category.query().findById(id).patch(data);
 }
@@ -28,7 +28,7 @@ async function updateCategory(id, data) {
 async function removeCategoryById(id) {
   const category = await Category.query().findById(id);
   if (!category) {
-    throw ErrorService.errorThrow(404);
+    throw new Error404();
   }
   return Category.query().findById(id).delete();
 }

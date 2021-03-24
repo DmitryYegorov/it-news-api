@@ -1,5 +1,6 @@
 const User = require("../models/user");
-const ErrorService = require("../middleware/error/errorService");
+const Error404 = require("../middleware/error/error404");
+const Error400 = require("../middleware/error/error400");
 
 async function createUser(user) {
   const result = await User.query()
@@ -8,8 +9,8 @@ async function createUser(user) {
     })
     .select()
     .count();
-  if (!result) {
-    throw ErrorService.errorThrow(400);
+  if (result) {
+    throw new Error400("User with that email already exists");
   }
   User.query().insert(user);
 }
@@ -17,7 +18,7 @@ async function createUser(user) {
 async function getUserById(id) {
   const result = await User.query().findById(id);
   if (!result) {
-    throw ErrorService.errorThrow(400);
+    throw new Error404();
   }
   return User.query().findById(id);
 }
@@ -29,7 +30,7 @@ async function getAllUsers() {
 async function updateUser(id, data) {
   const result = await User.query().findById(id);
   if (!result) {
-    throw ErrorService.errorThrow(404);
+    throw new Error404();
   }
   const name = data.name || result.name;
   const email = data.email || result.email;
@@ -37,6 +38,10 @@ async function updateUser(id, data) {
 }
 
 async function removeUserById(id) {
+  const result = await User.query().findById(id);
+  if (!result) {
+    throw new Error404();
+  }
   return User.query().findById(id).delete();
 }
 

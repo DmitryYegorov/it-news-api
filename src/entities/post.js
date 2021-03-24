@@ -1,4 +1,4 @@
-const ErrorService = require("../middleware/error/errorService");
+const Error404 = require("../middleware/error/error404");
 const Post = require("../models/post");
 
 async function getAllPosts() {
@@ -9,7 +9,7 @@ async function getAllPosts() {
 async function getPostById(id) {
   const post = await Post.query().findById(id);
   if (!post) {
-    throw ErrorService.errorThrow(404);
+    throw new Error404();
   }
   return post;
 }
@@ -21,7 +21,7 @@ async function createPost(post) {
 async function updatePost(id, data) {
   const post = await Post.query().findById(id);
   if (!post) {
-    throw ErrorService.errorThrow(404);
+    throw new Error404();
   }
   return Post.query().findById(id).patch(data);
 }
@@ -29,7 +29,7 @@ async function updatePost(id, data) {
 async function removePostById(id) {
   const post = await Post.query().findById(id);
   if (!post) {
-    throw ErrorService.errorThrow(404);
+    throw new Error404();
   }
   return Post.query().findById(id).delete();
 }
@@ -37,7 +37,7 @@ async function removePostById(id) {
 async function getPostsByCategory(categoryId) {
   const post = await Post.query().where({ categoryId }).select().first();
   if (!post) {
-    throw ErrorService.errorThrow(404);
+    throw new Error404();
   }
   return Post.query()
     .where({
@@ -49,7 +49,7 @@ async function getPostsByCategory(categoryId) {
 async function getPostsByAuthor(author) {
   const post = await Post.query().where({ author }).select().first();
   if (!post) {
-    throw ErrorService.errorThrow(404);
+    throw new Error404();
   }
   return Post.query()
     .where({
