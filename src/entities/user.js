@@ -8,11 +8,12 @@ async function createUser(user) {
       email: user.email,
     })
     .select()
-    .count();
+    .first();
+  console.log(result);
   if (result) {
     throw new Error400("User with that email already exists");
   }
-  User.query().insert(user);
+  await User.query().insert(user);
 }
 
 async function getUserById(id) {
