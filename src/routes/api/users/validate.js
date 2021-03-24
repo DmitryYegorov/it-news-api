@@ -23,7 +23,7 @@ function validate(schema) {
       if (e instanceof Error404) {
         throw new Error404();
       }
-      throw new Error400();
+      throw new Error400("Check the entered data");
     }
   };
 }

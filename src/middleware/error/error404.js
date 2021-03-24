@@ -1,7 +1,7 @@
 class Error404 extends Error {
-  constructor(message) {
+  constructor(message = "Data not found") {
     super();
-    this.message = message || "Data not found";
+    this.message = message;
     this.code = 404;
   }
 }
