@@ -1,5 +1,4 @@
-import * as User from "koa";
-
+const User = require("../models/user");
 const Subscription = require("../models/subscription");
 const Error404 = require("../middleware/error/error404");
 
