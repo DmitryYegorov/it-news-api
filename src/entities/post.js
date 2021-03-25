@@ -1,5 +1,8 @@
 const Error404 = require("../middleware/error/error404");
 const Post = require("../models/post");
+const UserEntity = require("./user");
+const CategoryEntity = require("./category");
+const Error400 = require("../middleware/error/error400");
 
 async function getAllPosts() {
   const posts = await Post.query().select();
@@ -15,6 +18,13 @@ async function getPostById(id) {
 }
 
 async function createPost(post) {
+  const user = await UserEntity.getUserById(post.author);
+  const category = await CategoryEntity.getCategoryById(post.categoryId);
+  if (!user || !category) {
+    throw new Error400(
+      "You cannot public a post because user or category not exists"
+    );
+  }
   return Post.query().insert(post);
 }
 

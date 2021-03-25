@@ -48,7 +48,8 @@ async function removeUserById(id) {
   if (!result) {
     throw new Error404();
   }
-  return User.query().findById(id).delete();
+
+  User.query().findById(id).delete();
 }
 
 async function emailExists(email) {

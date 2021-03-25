@@ -1,6 +1,8 @@
 const Comment = require("../models/comment");
 const Post = require("../models/post");
+const User = require("./user");
 const Error404 = require("../middleware/error/error404");
+const Error400 = require("../middleware/error/error400");
 
 async function getCommentsByPost(postId) {
   const post = await Post.query().findById(postId);
@@ -23,6 +25,10 @@ async function getCommentById(id) {
 }
 
 async function createComment(data) {
+  const result = await User.getUserById(data.author);
+  if (!result) {
+    throw new Error400("User not exists");
+  }
   return Comment.query().insert(data);
 }
 
