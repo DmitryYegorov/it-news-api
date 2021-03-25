@@ -35,7 +35,7 @@ async function removeCategoryById(id) {
   }
   if (postsByCategory !== 0) {
     throw new Error400(
-      "You cannot remove the category because there are posts of this category"
+      "You cannot remove the category because posts of this category exist"
     );
   }
   return Category.query().findById(id).delete();

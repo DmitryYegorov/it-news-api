@@ -68,6 +68,14 @@ async function getPostsByAuthor(author) {
     .select();
 }
 
+async function removePostsByAuthor(author) {
+  const post = await Post.query().where({ author }).select().first();
+  if (!post) {
+    throw new Error404();
+  }
+  return Post.query().where({ author }).delete();
+}
+
 module.exports = {
   getAllPosts,
   getPostById,
@@ -76,4 +84,5 @@ module.exports = {
   removePostById,
   getPostsByCategory,
   getPostsByAuthor,
+  removePostsByAuthor,
 };

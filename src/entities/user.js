@@ -1,4 +1,5 @@
 const User = require("../models/user");
+const PostEntity = require("./post");
 const Error404 = require("../middleware/error/error404");
 const Error400 = require("../middleware/error/error400");
 
@@ -48,7 +49,7 @@ async function removeUserById(id) {
   if (!result) {
     throw new Error404();
   }
-
+  await PostEntity.removePostsByAuthor(id);
   User.query().findById(id).delete();
 }
 
