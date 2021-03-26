@@ -1,6 +1,5 @@
 const Router = require("koa-router");
 const passport = require("koa-passport");
-// const bcrypt = require("bcryptjs"); move to entity
 const User = require("../../../entities/user");
 const { AddUserMiddleware, validate } = require("../users/validate");
 
@@ -10,7 +9,7 @@ const users = new Router({
 
 users
   .get("/logout", logout)
-  .post("/register", createUser, validate(AddUserMiddleware))
+  .post("/register", validate(AddUserMiddleware), createUser)
   .post("/login", login);
 
 async function logout(ctx) {
