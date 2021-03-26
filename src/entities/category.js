@@ -16,7 +16,7 @@ async function getCategoryById(id) {
 }
 
 async function createCategory(category) {
-  return Category.query().insert(category);
+  await Category.query().insert(category);
 }
 
 async function updateCategory(id, data) {
@@ -24,7 +24,7 @@ async function updateCategory(id, data) {
   if (!category) {
     throw new Error404();
   }
-  return Category.query().findById(id).patch(data);
+  await Category.query().findById(id).patch(data);
 }
 
 async function removeCategoryById(id) {
@@ -38,7 +38,7 @@ async function removeCategoryById(id) {
       "You cannot remove the category because posts of this category exist"
     );
   }
-  return Category.query().findById(id).delete();
+  await Category.query().findById(id).delete();
 }
 
 module.exports = {

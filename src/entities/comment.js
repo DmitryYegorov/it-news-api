@@ -29,7 +29,7 @@ async function createComment(data) {
   if (!result) {
     throw new Error400("User not exists");
   }
-  return Comment.query().insert(data);
+  await Comment.query().insert(data);
 }
 
 async function updateComment(id, data) {
@@ -37,7 +37,7 @@ async function updateComment(id, data) {
   if (!comment) {
     throw new Error404("Comment not exists");
   }
-  return Comment.query().findById(id).patch(data);
+  await Comment.query().findById(id).patch(data);
 }
 
 async function removeComment(id) {
@@ -45,7 +45,7 @@ async function removeComment(id) {
   if (!comment) {
     throw new Error404("Comment not exists");
   }
-  return Comment.query().findById(id).delete();
+  await Comment.query().findById(id).delete();
 }
 
 module.exports = {

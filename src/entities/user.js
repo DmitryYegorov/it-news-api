@@ -50,7 +50,7 @@ async function removeUserById(id) {
     throw new Error404();
   }
   await PostEntity.removePostsByAuthor(id);
-  User.query().findById(id).delete();
+  await User.query().findById(id).delete();
 }
 
 async function emailExists(email) {

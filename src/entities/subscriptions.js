@@ -27,7 +27,7 @@ async function getSubscribersByAuthor(userId) {
 }
 
 async function createSubscription(data) {
-  return Subscription.query().insert(data);
+  await Subscription.query().insert(data);
 }
 
 async function removeSubscription(id) {
@@ -35,7 +35,7 @@ async function removeSubscription(id) {
   if (!result) {
     throw new Error404();
   }
-  return Subscription.query().findById(id).delete();
+  await Subscription.query().findById(id).delete();
 }
 
 module.exports = {

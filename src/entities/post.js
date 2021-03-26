@@ -25,7 +25,7 @@ async function createPost(post) {
       "You cannot public a post because user or category not exists"
     );
   }
-  return Post.query().insert(post);
+  await Post.query().insert(post);
 }
 
 async function updatePost(id, data) {
@@ -33,7 +33,7 @@ async function updatePost(id, data) {
   if (!post) {
     throw new Error404();
   }
-  return Post.query().findById(id).patch(data);
+  await Post.query().findById(id).patch(data);
 }
 
 async function removePostById(id) {
@@ -41,7 +41,7 @@ async function removePostById(id) {
   if (!post) {
     throw new Error404();
   }
-  return Post.query().findById(id).delete();
+  await Post.query().findById(id).delete();
 }
 
 async function getPostsByCategory(categoryId) {
@@ -73,7 +73,7 @@ async function removePostsByAuthor(author) {
   if (!post) {
     throw new Error404();
   }
-  return Post.query().where({ author }).delete();
+  await Post.query().where({ author }).delete();
 }
 
 module.exports = {
