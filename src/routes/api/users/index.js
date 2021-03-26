@@ -24,20 +24,11 @@ async function getUserById(ctx) {
   ctx.status = 200;
 }
 
-async function updateUser(ctx, next) {
-  try {
-    const data = ctx.request.body;
-    const { id } = ctx.request.params;
-    const res = await User.updateUser(id, data);
-    if (res) {
-      ctx.status = 200;
-      ctx.body = res;
-      next();
-    }
-  } catch (e) {
-    ctx.status = 400;
-    ctx.body = e;
-  }
+async function updateUser(ctx) {
+  const data = ctx.request.body;
+  const { id } = ctx.request.params;
+  ctx.body = await User.updateUser(id, data);
+  ctx.status = 200;
 }
 
 async function removeUser(ctx) {
