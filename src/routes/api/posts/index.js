@@ -14,109 +14,48 @@ posts
   .put("/:id", updatePost)
   .delete("/:id", removePost);
 
-async function getAllPosts(ctx, next) {
-  try {
-    const data = await Post.getAllPosts();
-    if (data.length) {
-      ctx.body = data;
-      ctx.status = 200;
-      next();
-    }
-  } catch (e) {
-    ctx.body = e;
-    ctx.status = 400;
-  }
+async function getAllPosts(ctx) {
+  ctx.body = await Post.getAllPosts();
+  ctx.status = 200;
 }
 
-async function getPostById(ctx, next) {
-  try {
-    const { id } = ctx.request.params;
-    const data = await Post.getPostById(id);
-    if (data) {
-      ctx.body = data;
-      ctx.status = 200;
-      next();
-    }
-  } catch (e) {
-    ctx.body = e;
-    ctx.status = 400;
-  }
+async function getPostById(ctx) {
+  const { id } = ctx.request.params;
+  ctx.body = await Post.getPostById(id);
+  ctx.status = 200;
 }
 
-async function getPostsByCategory(ctx, next) {
-  try {
-    const { category } = ctx.request.params;
-    const data = await Post.getPostsByCategory(category);
-    if (data.length) {
-      ctx.body = data;
-      ctx.status = 200;
-      next();
-    }
-  } catch (e) {
-    ctx.body = e;
-    ctx.status = 400;
-  }
+async function getPostsByCategory(ctx) {
+  const { category } = ctx.request.params;
+  ctx.body = await Post.getPostsByCategory(category);
+  ctx.status = 200;
 }
 
-async function getPostsByAuthor(ctx, next) {
-  try {
-    const { author } = ctx.request.params;
-    const data = await Post.getPostsByAuthor(author);
-    if (data.length) {
-      ctx.body = data;
-      ctx.status = 201;
-      next();
-    }
-  } catch (e) {
-    ctx.body = e;
-    ctx.status = 400;
-  }
+async function getPostsByAuthor(ctx) {
+  const { author } = ctx.request.params;
+  ctx.body = await Post.getPostsByAuthor(author);
+  ctx.status = 201;
 }
 
-async function createPost(ctx, next) {
-  try {
-    const post = ctx.request.body;
-    const res = await Post.createPost(post);
-    if (res) {
-      ctx.status = 201;
-      ctx.body = res;
-      next();
-    }
-  } catch (e) {
-    ctx.body = e;
-    ctx.status = 400;
-  }
+async function createPost(ctx) {
+  const post = ctx.request.body;
+  const res = await Post.createPost(post);
+  ctx.status = 201;
+  ctx.body = res;
 }
 
-async function updatePost(ctx, next) {
-  try {
-    const data = ctx.request.body;
-    const { id } = ctx.request.params;
-    const res = await Post.updatePost(id, data);
-    if (res) {
-      ctx.status = 200;
-      ctx.body = res;
-      next();
-    }
-  } catch (e) {
-    ctx.body = e;
-    ctx.status = 400;
-  }
+async function updatePost(ctx) {
+  const data = ctx.request.body;
+  const { id } = ctx.request.params;
+  const res = await Post.updatePost(id, data);
+  ctx.status = 200;
+  ctx.body = res;
 }
 
-async function removePost(ctx, next) {
-  try {
-    const { id } = ctx.request.params;
-    const data = await Post.removePostById(id);
-    if (data) {
-      ctx.body = data;
-      ctx.status = 204;
-      next();
-    }
-  } catch (e) {
-    ctx.body = e;
-    ctx.status = 400;
-  }
+async function removePost(ctx) {
+  const { id } = ctx.request.params;
+  ctx.body = await Post.removePostById(id);
+  ctx.status = 204;
 }
 
 module.exports = posts;

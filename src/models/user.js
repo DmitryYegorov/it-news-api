@@ -13,19 +13,13 @@ class UserModel extends Model {
     return "id";
   }
 
-  static get timestamp() {
-    return true;
-  }
-
   static get jsonSchema() {
     return {
       type: "object",
-      required: ["name", "email"],
-
       properties: {
         id: { type: "integer" },
-        email: { type: "string", minLength: 10, maxLength: 60 },
-        name: { type: "string", minLength: 10, maxLength: 255 },
+        email: { type: "string" },
+        name: { type: "string" },
         password: { type: "string", minLength: 8, maxLength: 255 },
       },
     };

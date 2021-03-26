@@ -12,80 +12,36 @@ comments
   .put("/:id", updateComment)
   .delete("/:id", removeComment);
 
-async function getCommentById(ctx, next) {
-  try {
-    const { id } = ctx.request.params;
-    const comment = await Comment.getCommentById(id);
-    if (comment) {
-      ctx.body = comment;
-      ctx.status = 200;
-      next();
-    }
-  } catch (e) {
-    ctx.body = e;
-    ctx.status = 400;
-  }
+async function getCommentById(ctx) {
+  const { id } = ctx.request.params;
+  ctx.body = await Comment.getCommentById(id);
+  ctx.status = 200;
 }
 
-async function getCommentsByPost(ctx, next) {
-  try {
-    const { post } = ctx.request.params;
-    const comment = await Comment.getCommentsByPost(post);
-    if (comment) {
-      ctx.body = comment;
-      ctx.status = 200;
-      next();
-    }
-  } catch (e) {
-    ctx.body = e;
-    ctx.status = 400;
-  }
+async function getCommentsByPost(ctx) {
+  const { post } = ctx.request.params;
+  ctx.body = await Comment.getCommentsByPost(post);
+  ctx.status = 200;
 }
 
-async function createComment(ctx, next) {
-  try {
-    const comment = ctx.request.body;
-    const res = await Comment.createComment(comment);
-    if (res) {
-      ctx.body = res;
-      ctx.status = 201;
-      next();
-    }
-  } catch (e) {
-    ctx.body = e;
-    ctx.status = 400;
-  }
+async function createComment(ctx) {
+  const comment = ctx.request.body;
+  ctx.body = await Comment.createComment(comment);
+  ctx.status = 201;
 }
 
-async function updateComment(ctx, next) {
-  try {
-    const { id } = ctx.request.params;
-    const comment = ctx.request.body;
-    const res = await Comment.createComment(id, comment);
-    if (res) {
-      ctx.status = 201;
-      ctx.body = res;
-      next();
-    }
-  } catch (e) {
-    ctx.status = 400;
-    ctx.body = e;
-  }
+async function updateComment(ctx) {
+  const { id } = ctx.request.params;
+  const comment = ctx.request.body;
+  const res = await Comment.createComment(id, comment);
+  ctx.status = 201;
+  ctx.body = res;
 }
 
-async function removeComment(ctx, next) {
-  try {
-    const { id } = ctx.request.params;
-    const removed = await Comment.removeComment(id);
-    if (removed) {
-      ctx.body = removed;
-      ctx.status = 204;
-      next();
-    }
-  } catch (e) {
-    ctx.body = e;
-    ctx.status = 400;
-  }
+async function removeComment(ctx) {
+  const { id } = ctx.request.params;
+  ctx.body = await Comment.removeComment(id);
+  ctx.status = 204;
 }
 
 module.exports = comments;
