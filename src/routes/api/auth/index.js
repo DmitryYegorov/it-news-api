@@ -20,15 +20,15 @@ async function logout(ctx) {
 
 async function createUser(ctx) {
   const user = ctx.request.body;
-  const data = await User.createUser(user);
+  await User.createUser(user);
   ctx.status = 201;
-  ctx.body = data;
 }
 
-async function login(ctx) {
+async function login(ctx, next) {
   return passport.authenticate("local", (err, user) => {
     ctx.login(user);
-  })(ctx);
+    ctx.status = 200;
+  })(ctx, next);
 }
 
 module.exports = users;

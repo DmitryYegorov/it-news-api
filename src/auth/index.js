@@ -1,37 +1,36 @@
 const passport = require("koa-passport");
 const LocalStrategy = require("passport-local").Strategy;
 const bcrypt = require("bcryptjs");
-const User = require("../models/user");
+const User = require("../entities/user");
+const Error400 = require("../middleware/error/error400");
 
-const options = {};
+const options = {
+  usernameField: "email",
+};
 
-passport.serializeUser((user, done) => done(null, user.id));
-passport.deserializeUser((id, done) => {
-  return User.query()
-    .where({ id })
-    .first()
-    .then((user) => done(null, user))
-    .catch((err) => done(err, null));
+passport.serializeUser((user, done) => {
+  done(null, user.id);
+});
+passport.deserializeUser(async (id, done) => {
+  try {
+    const user = await User.getUserById(id);
+    if (user) {
+      done(null, user);
+    }
+  } catch (e) {
+    done(e);
+  }
 });
 passport.use(
-  new LocalStrategy(options, (email, password, done) => {
-    User.query()
-      .where({ email })
-      .first()
-      // eslint-disable-next-line consistent-return
-      .then((user) => {
-        if (!user) {
-          return done(null, false);
-        }
-        if (comparePassword(password, user.password)) {
-          return done(null, user);
-        }
-        return done(null, false);
-      })
-      .catch((err) => done(err));
+  new LocalStrategy(options, async (email, password, done) => {
+    const user = await User.getUserByEmail(email);
+    if (!user) {
+      return done(null, false);
+    }
+    if (!bcrypt.compareSync(password, user.password)) {
+      throw new Error400("Incorrect password");
+    } else {
+      return done(null, user);
+    }
   })
 );
-
-function comparePassword(userPassword, databasePassword) {
-  return bcrypt.compareSync(userPassword, databasePassword);
-}

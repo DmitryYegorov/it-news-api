@@ -26,7 +26,6 @@ app.use(session(app));
 require("./src/auth");
 
 app.use(passport.initialize());
-app.use(passport.session());
 app.use(koaJson());
 app.use(koaBodyParser());
 app.use(api.routes());

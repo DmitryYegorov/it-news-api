@@ -19,9 +19,17 @@ async function createUser(user) {
 async function getUserById(id) {
   const result = await User.query().findById(id);
   if (!result) {
-    throw new Error404();
+    throw new Error404("User not exists");
   }
   return User.query().findById(id);
+}
+
+async function getUserByEmail(email) {
+  const result = await User.query().where({ email }).first();
+  if (!result) {
+    throw new Error400("User with this email not exists");
+  }
+  return result;
 }
 
 async function getAllUsers() {
@@ -75,4 +83,5 @@ module.exports = {
   getAllUsers,
   updateUser,
   removeUserById,
+  getUserByEmail,
 };
