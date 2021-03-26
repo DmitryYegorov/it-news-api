@@ -21,8 +21,6 @@ async function logout(ctx) {
 
 async function createUser(ctx) {
   const user = ctx.request.body;
-  // const salt = bcrypt.genSaltSync(); move to entity
-  // const hash = bcrypt.hashSync(user.password, salt);
   const data = await User.createUser(user);
   ctx.status = 201;
   ctx.body = data;

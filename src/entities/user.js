@@ -1,3 +1,4 @@
+const bcrypt = require("bcryptjs");
 const User = require("../models/user");
 const PostEntity = require("./post");
 const Error404 = require("../middleware/error/error404");
@@ -7,7 +8,12 @@ async function createUser(user) {
   if (await emailExists(user.email)) {
     throw new Error400("You cannot use this email");
   }
-  await User.query().insert(user);
+  const salt = bcrypt.genSaltSync();
+  const hash = bcrypt.hashSync(user.password, salt);
+  await User.query().insert({
+    ...user,
+    password: hash,
+  });
 }
 
 async function getUserById(id) {
