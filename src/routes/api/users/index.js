@@ -12,33 +12,16 @@ users
   .put("/:id", updateUser, validate(UpdateUserMiddleware))
   .delete("/:id", removeUser);
 
-async function getAllUsers(ctx, next) {
-  try {
-    const data = await User.getAllUsers();
-    if (data.length) {
-      ctx.body = data;
-      ctx.status = 200;
-      next();
-    }
-  } catch (e) {
-    ctx.body = e;
-    ctx.status = 400;
-  }
+async function getAllUsers(ctx) {
+  const data = await User.getAllUsers();
+  ctx.status = 200;
+  ctx.body = data;
 }
 
-async function getUserById(ctx, next) {
-  try {
-    const { id } = ctx.request.params;
-    const data = await User.getUserById(id);
-    if (data) {
-      ctx.body = data;
-      ctx.status = 200;
-      next();
-    }
-  } catch (e) {
-    ctx.body = e;
-    ctx.status = 400;
-  }
+async function getUserById(ctx) {
+  const { id } = ctx.request.params;
+  ctx.body = await User.getUserById(id);
+  ctx.status = 200;
 }
 
 async function updateUser(ctx, next) {
@@ -57,19 +40,10 @@ async function updateUser(ctx, next) {
   }
 }
 
-async function removeUser(ctx, next) {
-  try {
-    const { id } = ctx.request.params;
-    const data = await User.removeUserById(id);
-    if (data) {
-      ctx.body = data;
-      ctx.status = 204;
-      next();
-    }
-  } catch (e) {
-    ctx.status = 400;
-    ctx.body = e;
-  }
+async function removeUser(ctx) {
+  const { id } = ctx.request.params;
+  ctx.body = await User.removeUserById(id);
+  ctx.status = 204;
 }
 
 module.exports = users;

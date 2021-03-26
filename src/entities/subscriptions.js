@@ -1,6 +1,12 @@
+const User = require("../models/user");
 const Subscription = require("../models/subscription");
+const Error404 = require("../middleware/error/error404");
 
 async function getSubscriptionsByUser(userId) {
+  const result = await User.query().findById(userId);
+  if (!result) {
+    throw new Error404();
+  }
   return Subscription.query().select({
     where: {
       subscriber: userId,
@@ -9,6 +15,10 @@ async function getSubscriptionsByUser(userId) {
 }
 
 async function getSubscribersByAuthor(userId) {
+  const result = await User.query().findById(userId);
+  if (!result) {
+    throw new Error404();
+  }
   return Subscription.query().select({
     where: {
       author: userId,
@@ -17,11 +27,15 @@ async function getSubscribersByAuthor(userId) {
 }
 
 async function createSubscription(data) {
-  return Subscription.query().insert(data);
+  await Subscription.query().insert(data);
 }
 
 async function removeSubscription(id) {
-  return Subscription.query().findById(id).delete();
+  const result = await Subscription.query().findById(id);
+  if (!result) {
+    throw new Error404();
+  }
+  await Subscription.query().findById(id).delete();
 }
 
 module.exports = {

@@ -6,6 +6,7 @@ const koaBodyParser = require("koa-bodyparser");
 const passport = require("koa-passport");
 const session = require("koa-session");
 const dbSetup = require("./knex/db-setup");
+const { errorHandler } = require("./src/middleware/error/error-handler");
 
 dbSetup();
 
@@ -19,6 +20,7 @@ app.use(
     origin: "*",
   })
 );
+app.use(errorHandler());
 app.use(koaLogger());
 app.use(session(app));
 require("./src/auth");
@@ -26,13 +28,7 @@ require("./src/auth");
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(koaJson());
-app.use(
-  koaBodyParser({
-    onerror: (err, ctx) => {
-      ctx.throw("body parse error", 422);
-    },
-  })
-);
+app.use(koaBodyParser());
 app.use(api.routes());
 app.use(api.allowedMethods());
 app.listen(PORT);

@@ -11,10 +11,6 @@ class CommentModel extends Model {
     return "id";
   }
 
-  static get timestamp() {
-    return true;
-  }
-
   static get jsonSchema() {
     return {
       type: "object",
