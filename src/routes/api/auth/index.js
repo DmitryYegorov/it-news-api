@@ -3,11 +3,11 @@ const passport = require("koa-passport");
 const User = require("../../../entities/user");
 const { AddUserMiddleware, validate } = require("../users/validate");
 
-const users = new Router({
+const auth = new Router({
   prefix: "/auth",
 });
 
-users
+auth
   .get("/logout", logout)
   .post("/register", validate(AddUserMiddleware), createUser)
   .post("/login", login);
@@ -25,10 +25,15 @@ async function createUser(ctx) {
 }
 
 async function login(ctx, next) {
-  return passport.authenticate("local", (err, user) => {
-    ctx.login(user);
-    ctx.status = 200;
+  await passport.authenticate("local", (err, user) => {
+    if (err) {
+      throw err;
+    }
+    if (user) {
+      ctx.login(user);
+      ctx.status = 200;
+    }
   })(ctx, next);
 }
 
-module.exports = users;
+module.exports = auth;

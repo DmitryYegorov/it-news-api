@@ -3,8 +3,8 @@ const koaCors = require("@koa/cors");
 const koaJson = require("koa-json");
 const koaLogger = require("koa-logger");
 const koaBodyParser = require("koa-bodyparser");
-const passport = require("koa-passport");
 const session = require("koa-session");
+const passport = require("koa-passport");
 const dbSetup = require("./knex/db-setup");
 const { errorHandler } = require("./src/middleware/error/error-handler");
 
@@ -22,10 +22,11 @@ app.use(
 );
 app.use(errorHandler());
 app.use(koaLogger());
-app.use(session(app));
 require("./src/auth");
 
+app.use(session(app));
 app.use(passport.initialize());
+app.use(passport.session());
 app.use(koaJson());
 app.use(koaBodyParser());
 app.use(api.routes());

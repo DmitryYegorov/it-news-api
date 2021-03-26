@@ -77,6 +77,13 @@ async function emailExists(email) {
   return !!result;
 }
 
+function checkPassword(user, password) {
+  if (!bcrypt.compareSync(password, user.password)) {
+    throw new Error400("Incorrect password");
+  }
+  return true;
+}
+
 module.exports = {
   createUser,
   getUserById,
@@ -84,4 +91,5 @@ module.exports = {
   updateUser,
   removeUserById,
   getUserByEmail,
+  checkPassword,
 };
