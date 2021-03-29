@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../../../entities/user");
 const { AddUserMiddleware, validate } = require("../users/validate");
 const Error400 = require("../../../middleware/error/error400");
+const { sendNotification } = require("../../../sendmail");
 
 const { SECRET } = process.env;
 const auth = new Router({
@@ -24,7 +25,21 @@ async function logout(ctx) {
 async function createUser(ctx) {
   const user = ctx.request.body;
   await User.createUser(user);
-
+  const body = `
+  <div style="display: flex; width: 80%; margin: 0 auto; flex-direction: column; align-items: center">
+  <div style="background: cadetblue; position: relative; width: 100%; min-height: 300px; padding: 20px;">
+    <h1 align="center" style="color: #fff;">Dear ${user.name}</h1>
+  </div>
+  <div style="background: aqua; position: relative; width: 100%; min-height: 300px; padding: 20px;">
+    <p align="center">Your account has been created successfully!</p>
+  </div>
+</div>
+  `;
+  await sendNotification(
+    user.email,
+    "Your account created, activate this",
+    body
+  );
   ctx.status = 201;
 }
 
