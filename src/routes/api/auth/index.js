@@ -24,6 +24,7 @@ async function logout(ctx) {
 async function createUser(ctx) {
   const user = ctx.request.body;
   await User.createUser(user);
+
   ctx.status = 201;
 }
 
