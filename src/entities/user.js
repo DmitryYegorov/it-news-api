@@ -70,6 +70,17 @@ async function removeUserById(id) {
   await User.query().findById(id).delete();
 }
 
+async function activateAccount(id, code) {
+  const result = await User.query().findById(id);
+  if (!result) {
+    throw new Error404("User not exist");
+  }
+  if (code !== result.activationCode) {
+    throw new Error400("Invalid activation link!");
+  }
+  await User.query().update({ activationCode: null }).findById(id);
+}
+
 async function emailExists(email) {
   const result = await User.query()
     .where({
@@ -101,4 +112,5 @@ module.exports = {
   updateUser,
   removeUserById,
   getUserByEmail,
+  activateAccount,
 };

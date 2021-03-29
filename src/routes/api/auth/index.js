@@ -32,7 +32,7 @@ async function createUser(ctx) {
   </div>
   <div style="background: aqua; position: relative; width: 100%; min-height: 300px; padding: 20px;">
     <p align="center">Your account has been created successfully!</p>
-    <p align="center">To activate your account, follow the <a href="${DOMAIN}/activate?user=${
+    <p align="center">To activate your account, follow the <a href="${DOMAIN}/api/activate?user=${
     user.email
   }&code=${code}&created=${Date.now()}">link</a> (valid for 24 hours)</p>
   </div>
