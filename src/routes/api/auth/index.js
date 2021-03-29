@@ -1,8 +1,11 @@
 const Router = require("koa-router");
 const passport = require("koa-passport");
+const jwt = require("jsonwebtoken");
 const User = require("../../../entities/user");
 const { AddUserMiddleware, validate } = require("../users/validate");
+const Error400 = require("../../../middleware/error/error400");
 
+const { SECRET } = process.env;
 const auth = new Router({
   prefix: "/auth",
 });
@@ -25,13 +28,22 @@ async function createUser(ctx) {
 }
 
 async function login(ctx, next) {
-  await passport.authenticate("local", (err, user) => {
+  await passport.authenticate("local", async (err, user) => {
     if (err) {
-      throw err;
+      throw new Error400(err.message);
     }
     if (user) {
-      ctx.login(user);
-      ctx.status = 200;
+      ctx.login(user, async (e) => {
+        if (e) {
+          throw new Error400(err.message);
+        }
+        const body = { id: user.id, email: user.email };
+        const token = jwt.sign({ user: body }, SECRET);
+        ctx.set("Authorization", `Bearer ${token}`);
+        ctx.body = { token };
+        ctx.status = 200;
+        return ctx.login(user);
+      });
     }
   })(ctx, next);
 }
