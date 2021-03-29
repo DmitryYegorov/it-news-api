@@ -6,7 +6,7 @@ const { AddUserMiddleware, validate } = require("../users/validate");
 const Error400 = require("../../../middleware/error/error400");
 const { sendNotification } = require("../../../sendmail");
 
-const { SECRET } = process.env;
+const { SECRET, DOMAIN } = process.env;
 const auth = new Router({
   prefix: "/auth",
 });
@@ -24,7 +24,7 @@ async function logout(ctx) {
 
 async function createUser(ctx) {
   const user = ctx.request.body;
-  await User.createUser(user);
+  const code = await User.createUser(user);
   const body = `
   <div style="display: flex; width: 80%; margin: 0 auto; flex-direction: column; align-items: center">
   <div style="background: cadetblue; position: relative; width: 100%; min-height: 300px; padding: 20px;">
@@ -32,6 +32,9 @@ async function createUser(ctx) {
   </div>
   <div style="background: aqua; position: relative; width: 100%; min-height: 300px; padding: 20px;">
     <p align="center">Your account has been created successfully!</p>
+    <p align="center">To activate your account, follow the <a href="${DOMAIN}/activate?user=${
+    user.email
+  }&code=${code}&created=${Date.now()}">link</a> (valid for 24 hours)</p>
   </div>
 </div>
   `;

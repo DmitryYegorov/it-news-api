@@ -8,12 +8,15 @@ async function createUser(user) {
   if (await emailExists(user.email)) {
     throw new Error400("You cannot use this email");
   }
+  const code = generateCodeActivation();
   const salt = bcrypt.genSaltSync();
   const hash = bcrypt.hashSync(user.password, salt);
   await User.query().insert({
     ...user,
+    activationCode: code,
     password: hash,
   });
+  return code;
 }
 
 async function getUserById(id) {
@@ -75,6 +78,20 @@ async function emailExists(email) {
     .select()
     .first();
   return !!result;
+}
+
+function generateCodeActivation() {
+  let code = 0;
+  // eslint-disable-next-line no-plusplus
+  for (let i = 1; i <= 6; i++) {
+    let num = Math.floor(Math.random() * Math.floor(10));
+    if (num === 0) {
+      num = 9;
+    }
+    code *= 10;
+    code += num;
+  }
+  return code;
 }
 
 module.exports = {
