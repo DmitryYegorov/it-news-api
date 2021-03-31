@@ -1,6 +1,5 @@
 const bcrypt = require("bcryptjs");
 const User = require("../models/user");
-const PostEntity = require("./post");
 const Error404 = require("../middleware/error/error404");
 const Error400 = require("../middleware/error/error400");
 
@@ -25,14 +24,6 @@ async function getUserById(id) {
     throw new Error404("User not exists");
   }
   return User.query().findById(id);
-}
-
-async function getUserByEmail(email) {
-  const result = await User.query().where({ email }).first();
-  if (!result) {
-    throw new Error400("User with this email not exists");
-  }
-  return result;
 }
 
 async function getAllUsers() {
@@ -61,24 +52,15 @@ async function updateUser(id, data) {
   await User.query().update({ name, email }).findById(id);
 }
 
-async function removeUserById(id) {
-  const result = await User.query().findById(id);
-  if (!result) {
-    throw new Error404();
-  }
-  await PostEntity.removePostsByAuthor(id);
-  await User.query().findById(id).delete();
-}
-
-async function activateAccount(id, code) {
-  const result = await User.query().findById(id);
+async function activateAccount(email, code) {
+  const result = await User.query().where({ email }).select().first();
   if (!result) {
     throw new Error404("User not exist");
   }
   if (code !== result.activationCode) {
     throw new Error400("Invalid activation link!");
   }
-  await User.query().update({ activationCode: null }).findById(id);
+  await User.query().update({ activationCode: null }).findById(result.id);
 }
 
 async function emailExists(email) {
@@ -110,7 +92,5 @@ module.exports = {
   getUserById,
   getAllUsers,
   updateUser,
-  removeUserById,
-  getUserByEmail,
   activateAccount,
 };

@@ -9,8 +9,7 @@ const users = new Router({
 users
   .get("/", getAllUsers)
   .get("/:id", getUserById)
-  .put("/:id", updateUser, validate(UpdateUserMiddleware))
-  .delete("/:id", removeUser);
+  .put("/:id", updateUser, validate(UpdateUserMiddleware));
 
 async function getAllUsers(ctx) {
   const data = await User.getAllUsers();
@@ -29,12 +28,6 @@ async function updateUser(ctx) {
   const { id } = ctx.request.params;
   ctx.body = await User.updateUser(id, data);
   ctx.status = 200;
-}
-
-async function removeUser(ctx) {
-  const { id } = ctx.request.params;
-  ctx.body = await User.removeUserById(id);
-  ctx.status = 204;
 }
 
 module.exports = users;

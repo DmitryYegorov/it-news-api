@@ -51,6 +51,9 @@ async function login(ctx, next) {
     if (err) {
       throw new Error400(err.message);
     }
+    if (user.activationCode) {
+      throw new Error400("You have to activate an account!");
+    }
     if (user) {
       ctx.login(user, async (e) => {
         if (e) {
