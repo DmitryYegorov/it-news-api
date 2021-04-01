@@ -2,12 +2,13 @@ const Router = require("koa-router");
 const passport = require("koa-passport");
 const jwt = require("jsonwebtoken");
 const User = require("../../../entities/user");
-const { AddUserMiddleware, validate } = require("../users/validate");
-const Error400 = require("../../../middleware/error/error400");
 const {
-  activateAccountMail,
-  resetPasswordMail,
-} = require("../../../services/mail");
+  AddUserMiddleware,
+  PasswordMiddleware,
+  validate,
+} = require("../users/validate");
+const Error400 = require("../../../middleware/error/error400");
+const { sendNotification } = require("../../../services/mail");
 
 const { DOMAIN } = process.env;
 
@@ -19,7 +20,7 @@ const auth = new Router({
 auth
   .get("/logout", logout)
   .post("/register", validate(AddUserMiddleware), createUser)
-  .post("/reset_password", resetPassword)
+  .post("/reset_password", validate(PasswordMiddleware), resetPassword)
   .post("/login", login);
 
 async function logout(ctx) {
@@ -34,7 +35,7 @@ async function createUser(ctx) {
   const link = `${DOMAIN}/api/link/activate?user=${
     user.email
   }&code=${code}&created=${Date.now()}`;
-  await activateAccountMail(user.email, "Activate your account test", {
+  await sendNotification(user.email, "Activate your account test", {
     type: "Activate account",
     name: user.name,
     link,
@@ -74,7 +75,7 @@ async function resetPassword(ctx) {
     const link = `${DOMAIN}/api/link/reset_password/?user=${
       user.email
     }&code=${code}&created=${Date.now()}`;
-    await resetPasswordMail(email, "Reset your password", {
+    await sendNotification(email, "Reset your password", {
       type: "Reset your password",
       name: user.name,
       link,

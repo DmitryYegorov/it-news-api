@@ -5,7 +5,7 @@ const activate = new Router({
   prefix: "/link",
 });
 
-activate.get("/activate", activateAcc).post("/reset_password", resetPassword);
+activate.get("/activate", activateAcc).post("/update_password", resetPassword);
 
 async function activateAcc(ctx) {
   const params = ctx.request.query;

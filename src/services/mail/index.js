@@ -25,7 +25,7 @@ const partials = {
     .toString(),
 };
 
-async function activateAccountMail(to, subject, data) {
+async function sendNotification(to, subject, data) {
   const body = Mustache.render(
     template,
     {
@@ -35,23 +35,6 @@ async function activateAccountMail(to, subject, data) {
     },
     partials
   );
-  await sendNotification(to, subject, body);
-}
-
-async function resetPasswordMail(to, subject = "Reset your password", data) {
-  const body = Mustache.render(
-    template,
-    {
-      ...data,
-      email: to,
-      date: Date.now,
-    },
-    partials
-  );
-  await sendNotification(to, subject, body);
-}
-
-async function sendNotification(to, subject, body) {
   await transporter.sendMail({
     from: auth.user,
     to,
@@ -61,6 +44,5 @@ async function sendNotification(to, subject, body) {
 }
 
 module.exports = {
-  activateAccountMail,
-  resetPasswordMail,
+  sendNotification,
 };

@@ -13,7 +13,7 @@ const UpdateUserMiddleware = yup.object().shape({
   email: yup.string().trim().email(),
 });
 
-const Password = yup.object().shape({
+const PasswordMiddleware = yup.object().shape({
   password: yup.string().trim().min(8).max(24).required(),
 });
 
@@ -35,6 +35,6 @@ function validate(schema) {
 module.exports = {
   AddUserMiddleware,
   UpdateUserMiddleware,
-  Password,
+  PasswordMiddleware,
   validate,
 };
