@@ -103,6 +103,19 @@ async function resetPassword(email, newPassword, code) {
     .findById(result.id);
 }
 
+async function updatePassword(email, oldPassowrd, newPassword) {
+  const salt = bcrypt.genSaltSync();
+  const hash = bcrypt.hashSync(newPassword, salt);
+  const user = await getUserByEmail(email);
+  if (!user) {
+    throw new Error400("User with that email not exists!");
+  }
+  if (!bcrypt.compareSync(oldPassowrd, user.password)) {
+    throw new Error400("Incorrect password!");
+  }
+  await User.query().update({ password: hash }).where({ email });
+}
+
 function generateCode() {
   let code = 0;
   // eslint-disable-next-line no-plusplus
@@ -127,4 +140,5 @@ module.exports = {
   resetPasswordReq,
   getUserByEmail,
   resetPassword,
+  updatePassword,
 };

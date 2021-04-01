@@ -2,17 +2,11 @@ const Router = require("koa-router");
 const passport = require("koa-passport");
 const jwt = require("jsonwebtoken");
 const User = require("../../../entities/user");
-const {
-  AddUserMiddleware,
-  PasswordMiddleware,
-  validate,
-} = require("../users/validate");
+const { AddUserMiddleware, validate } = require("../users/validate");
 const Error400 = require("../../../middleware/error/error400");
 const { sendNotification } = require("../../../services/mail");
 
-const { DOMAIN } = process.env;
-
-const { SECRET } = process.env;
+const { DOMAIN, SECRET } = process.env;
 const auth = new Router({
   prefix: "/auth",
 });
@@ -20,7 +14,8 @@ const auth = new Router({
 auth
   .get("/logout", logout)
   .post("/register", validate(AddUserMiddleware), createUser)
-  .post("/reset_password", validate(PasswordMiddleware), resetPassword)
+  .post("/reset_password", resetPassword)
+  .put("/update_password", updatePassword)
   .post("/login", login);
 
 async function logout(ctx) {
@@ -49,7 +44,7 @@ async function login(ctx, next) {
       throw new Error400(err.message);
     }
     if (user.activationCode) {
-      throw new Error400("You have to link an account!");
+      throw new Error400("You have to activate an account!");
     }
     if (user) {
       ctx.login(user, async (e) => {
@@ -83,6 +78,21 @@ async function resetPassword(ctx) {
     ctx.status = 200;
   } else {
     throw new Error400("User with that email not exists");
+  }
+}
+
+async function updatePassword(ctx) {
+  if (!ctx.request.headers.authorization) {
+    ctx.status = 401;
+  } else {
+    const token = ctx.request.headers.authorization.split(" ")[1];
+    if (!jwt.verify(token, SECRET)) {
+      ctx.status = 401;
+    } else {
+      const data = ctx.request.body;
+      await User.updatePassword(data.email, data.oldPassword, data.newPassword);
+      ctx.status = 200;
+    }
   }
 }
 

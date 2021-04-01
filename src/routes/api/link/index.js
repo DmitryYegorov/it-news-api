@@ -1,11 +1,14 @@
 const Router = require("koa-router");
+const { PasswordMiddleware, validate } = require("../users/validate");
 const User = require("../../../entities/user");
 
 const activate = new Router({
   prefix: "/link",
 });
 
-activate.get("/activate", activateAcc).post("/update_password", resetPassword);
+activate
+  .get("/activate", activateAcc)
+  .post("/reset_password", validate(PasswordMiddleware), resetPassword);
 
 async function activateAcc(ctx) {
   const params = ctx.request.query;
@@ -24,7 +27,7 @@ async function resetPassword(ctx) {
   const { password } = ctx.request.body;
   if ((Date.now() - +params.created) / 3600000 <= 24) {
     await User.resetPassword(params.user, password, +params.code);
-    ctx.body = "Your account activated!";
+    ctx.body = "Your password updated!";
     ctx.status = 200;
   } else {
     ctx.body = "Activation period expired!";
