@@ -5,6 +5,7 @@ const User = require("../../../entities/user");
 const { AddUserMiddleware, validate } = require("../users/validate");
 const Error400 = require("../../../middleware/error/error400");
 const { sendNotification } = require("../../../services/mail");
+const authMiddleware = require("../../../middleware/auth");
 
 const { DOMAIN, SECRET } = process.env;
 const auth = new Router({
@@ -15,11 +16,11 @@ auth
   .get("/logout", logout)
   .post("/register", validate(AddUserMiddleware), createUser)
   .post("/reset_password", resetPassword)
-  .put("/update_password", updatePassword)
+  .put("/update_password", authMiddleware, updatePassword)
   .post("/login", login);
 
 async function logout(ctx) {
-  if (ctx.isAuthenticated()) {
+  if (await ctx.isAuthenticated()) {
     ctx.logout();
   }
 }
@@ -82,18 +83,9 @@ async function resetPassword(ctx) {
 }
 
 async function updatePassword(ctx) {
-  if (!ctx.request.headers.authorization) {
-    ctx.status = 401;
-  } else {
-    const token = ctx.request.headers.authorization.split(" ")[1];
-    if (!jwt.verify(token, SECRET)) {
-      ctx.status = 401;
-    } else {
-      const data = ctx.request.body;
-      await User.updatePassword(data.email, data.oldPassword, data.newPassword);
-      ctx.status = 200;
-    }
-  }
+  const data = ctx.request.body;
+  await User.updatePassword(data.email, data.oldPassword, data.newPassword);
+  ctx.status = 200;
 }
 
 module.exports = auth;
