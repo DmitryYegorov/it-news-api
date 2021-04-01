@@ -5,6 +5,7 @@ exports.up = function (knex) {
     table.string("email", 255).notNullable().unique();
     table.string("password", 255).notNullable();
     table.integer("activationCode");
+    table.integer("recoveryPasswordCode");
     table.dateTime("createdAt").notNullable();
     table.dateTime("updatedAt");
   });

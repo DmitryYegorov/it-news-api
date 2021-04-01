@@ -13,6 +13,10 @@ const UpdateUserMiddleware = yup.object().shape({
   email: yup.string().trim().email(),
 });
 
+const Password = yup.object().shape({
+  password: yup.string().trim().min(8).max(24).required(),
+});
+
 function validate(schema) {
   return async (ctx, next) => {
     // eslint-disable-next-line no-useless-catch
@@ -31,5 +35,6 @@ function validate(schema) {
 module.exports = {
   AddUserMiddleware,
   UpdateUserMiddleware,
+  Password,
   validate,
 };

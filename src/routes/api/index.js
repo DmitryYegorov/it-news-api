@@ -6,7 +6,7 @@ const users = require("./users");
 const subscriptions = require("./subscriptions");
 const categories = require("./category");
 const auth = require("./auth");
-const activate = require("./activate");
+const link = require("./link");
 
 const router = new Router({
   prefix: "/api",
@@ -18,6 +18,6 @@ router.use(users.routes());
 router.use(subscriptions.routes());
 router.use(categories.routes());
 router.use(auth.routes());
-router.use(activate.routes());
+router.use(link.routes());
 
 module.exports = router;

@@ -1,5 +1,6 @@
 const bcrypt = require("bcryptjs");
 const User = require("../models/user");
+
 const Error404 = require("../middleware/error/error404");
 const Error400 = require("../middleware/error/error400");
 
@@ -7,7 +8,7 @@ async function createUser(user) {
   if (await emailExists(user.email)) {
     throw new Error400("You cannot use this email");
   }
-  const code = generateCodeActivation();
+  const code = generateCode();
   const salt = bcrypt.genSaltSync();
   const hash = bcrypt.hashSync(user.password, salt);
   await User.query().insert({
@@ -73,7 +74,36 @@ async function emailExists(email) {
   return !!result;
 }
 
-function generateCodeActivation() {
+async function getUserByEmail(email) {
+  return User.query().where({ email }).select().first();
+}
+
+async function resetPasswordReq(email) {
+  const user = getUserByEmail(email);
+  if (!user) {
+    throw new Error400("User with that email not exists!");
+  }
+  const code = generateCode();
+  await User.query().update({ recoveryPasswordCode: code }).where({ email });
+  return code;
+}
+
+async function resetPassword(email, newPassword, code) {
+  const salt = bcrypt.genSaltSync();
+  const hash = bcrypt.hashSync(newPassword, salt);
+  const result = await getUserByEmail(email);
+  if (!result) {
+    throw new Error404("User not exist");
+  }
+  if (code !== result.recoveryPasswordCode) {
+    throw new Error400("Invalid activation link!");
+  }
+  await User.query()
+    .update({ recoveryPasswordCode: null, password: hash })
+    .findById(result.id);
+}
+
+function generateCode() {
   let code = 0;
   // eslint-disable-next-line no-plusplus
   for (let i = 1; i <= 6; i++) {
@@ -93,4 +123,8 @@ module.exports = {
   getAllUsers,
   updateUser,
   activateAccount,
+  emailExists,
+  resetPasswordReq,
+  getUserByEmail,
+  resetPassword,
 };
