@@ -6,11 +6,12 @@ const { SECRET } = process.env;
 // eslint-disable-next-line consistent-return
 module.exports = async (ctx, next) => {
   if (ctx.method === "OPTIONS") {
-    await next();
+    return next();
   }
-  const token = ctx.headers.authorization.split(" ")[1];
-  if (!token) {
+  if (!ctx.headers.authorization) {
     throw new Error401();
   }
+  const token = ctx.headers.authorization.split(" ")[1];
   ctx.request.body.user = jwt.verify(token, SECRET);
+  return next();
 };

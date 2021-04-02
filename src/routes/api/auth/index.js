@@ -5,7 +5,7 @@ const User = require("../../../entities/user");
 const { AddUserMiddleware, validate } = require("../users/validate");
 const Error400 = require("../../../middleware/error/error400");
 const { sendNotification } = require("../../../services/mail");
-const authMiddleware = require("../../../middleware/auth");
+const authenticate = require("../../../middleware/auth");
 
 const { DOMAIN, SECRET } = process.env;
 const auth = new Router({
@@ -16,7 +16,7 @@ auth
   .get("/logout", logout)
   .post("/register", validate(AddUserMiddleware), createUser)
   .post("/reset_password", resetPassword)
-  .put("/update_password", authMiddleware, updatePassword)
+  .put("/update_password", authenticate, updatePassword)
   .post("/login", login);
 
 async function logout(ctx) {
