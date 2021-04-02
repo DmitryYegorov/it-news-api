@@ -2,7 +2,13 @@ const Router = require("koa-router");
 const passport = require("koa-passport");
 const jwt = require("jsonwebtoken");
 const User = require("../../../entities/user");
-const { AddUserMiddleware, validate } = require("../users/validate");
+const {
+  AddUserMiddleware,
+  UpdatePasswordMiddleware,
+  AuthMiddleware,
+  ResetPasswordMiddleware,
+  validate,
+} = require("../users/validate");
 const Error400 = require("../../../middleware/error/error400");
 const { sendNotification } = require("../../../services/mail");
 const authenticate = require("../../../middleware/auth");
@@ -15,9 +21,14 @@ const auth = new Router({
 auth
   .get("/logout", logout)
   .post("/register", validate(AddUserMiddleware), createUser)
-  .post("/reset_password", resetPassword)
-  .put("/update_password", authenticate, updatePassword)
-  .post("/login", login);
+  .post("/reset_password", validate(ResetPasswordMiddleware), resetPassword)
+  .put(
+    "/update_password",
+    authenticate,
+    validate(UpdatePasswordMiddleware),
+    updatePassword
+  )
+  .post("/login", validate(AuthMiddleware), login);
 
 async function logout(ctx) {
   if (await ctx.isAuthenticated()) {

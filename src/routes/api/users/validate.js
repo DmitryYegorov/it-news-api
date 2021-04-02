@@ -13,8 +13,19 @@ const UpdateUserMiddleware = yup.object().shape({
   email: yup.string().trim().email(),
 });
 
-const PasswordMiddleware = yup.object().shape({
+const UpdatePasswordMiddleware = yup.object().shape({
+  email: yup.string().trim().email().required(),
+  oldPassword: yup.string().trim().min(8).max(24).required(),
+  newPassword: yup.string().trim().min(8).max(24).required(),
+});
+
+const AuthMiddleware = yup.object().shape({
+  email: yup.string().trim().email().required(),
   password: yup.string().trim().min(8).max(24).required(),
+});
+
+const ResetPasswordMiddleware = yup.object().shape({
+  email: yup.string().trim().email().required(),
 });
 
 function validate(schema) {
@@ -35,6 +46,8 @@ function validate(schema) {
 module.exports = {
   AddUserMiddleware,
   UpdateUserMiddleware,
-  PasswordMiddleware,
+  UpdatePasswordMiddleware,
+  AuthMiddleware,
+  ResetPasswordMiddleware,
   validate,
 };
