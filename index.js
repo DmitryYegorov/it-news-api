@@ -7,6 +7,7 @@ const helmet = require("koa-helmet");
 const passport = require("koa-passport");
 const dbSetup = require("./knex/db-setup");
 const { errorHandler } = require("./src/middleware/error/error-handler");
+require("./src/auth");
 
 dbSetup();
 
@@ -14,7 +15,6 @@ const app = new Koa();
 const { PORT } = process.env;
 const api = require("./src/routes/api");
 
-app.keys = ["super-secret-key"];
 app.use(
   koaCors({
     origin: "*",
@@ -23,10 +23,7 @@ app.use(
 app.use(helmet());
 app.use(errorHandler());
 app.use(koaLogger());
-require("./src/auth");
-
 app.use(passport.initialize());
-app.use(passport.session());
 app.use(koaJson());
 app.use(koaBodyParser());
 app.use(api.routes());

@@ -9,7 +9,7 @@ const users = new Router({
 users
   .get("/", getAllUsers)
   .get("/:id", getUserById)
-  .put("/:id", updateUser, validate(UpdateUserMiddleware));
+  .put("/:id", validate(UpdateUserMiddleware), updateUser);
 
 async function getAllUsers(ctx) {
   const data = await User.getAllUsers();

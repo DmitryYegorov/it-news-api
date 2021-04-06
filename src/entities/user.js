@@ -78,13 +78,14 @@ async function getUserByEmail(email) {
   return User.query().where({ email }).select().first();
 }
 
-async function resetPasswordReq(email) {
-  const user = getUserByEmail(email);
-  if (!user) {
+async function resetPasswordReq(user) {
+  if (!(await emailExists(user.email))) {
     throw new Error400("User with that email not exists!");
   }
   const code = generateCode();
-  await User.query().update({ recoveryPasswordCode: code }).where({ email });
+  await User.query()
+    .update({ recoveryPasswordCode: code })
+    .where({ email: user.email });
   return code;
 }
 

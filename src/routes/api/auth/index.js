@@ -19,11 +19,11 @@ const auth = new Router({
 });
 
 auth
-  .get("/logout", logout)
+  .get("/logout", authenticate, logout)
   .post("/register", validate(AddUserMiddleware), createUser)
-  .post("/reset_password", validate(ResetPasswordMiddleware), resetPassword)
+  .post("/recovery", validate(ResetPasswordMiddleware), resetPassword)
   .put(
-    "/update_password",
+    "/new-password",
     authenticate,
     validate(UpdatePasswordMiddleware),
     updatePassword
@@ -31,9 +31,7 @@ auth
   .post("/login", validate(AuthMiddleware), login);
 
 async function logout(ctx) {
-  if (await ctx.isAuthenticated()) {
-    ctx.logout();
-  }
+  await ctx.logout();
 }
 
 async function createUser(ctx) {
@@ -64,7 +62,7 @@ async function login(ctx, next) {
           throw new Error400(err.message);
         }
         const body = { id: user.id, email: user.email };
-        const token = jwt.sign({ user: body }, SECRET);
+        const token = jwt.sign({ user: body }, SECRET, { expires: "24h" });
         ctx.set("Authorization", `Bearer ${token}`);
         ctx.body = { token };
         ctx.status = 200;
@@ -78,7 +76,7 @@ async function resetPassword(ctx) {
   const { email } = ctx.request.body;
   if (await User.emailExists(email)) {
     const user = await User.getUserByEmail(email);
-    const code = await User.resetPasswordReq(email);
+    const code = await User.resetPasswordReq(user);
     const link = `${DOMAIN}/api/link/reset_password/?user=${
       user.email
     }&code=${code}&created=${Date.now()}`;

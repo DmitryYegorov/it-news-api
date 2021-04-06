@@ -8,7 +8,7 @@ const activate = new Router({
 
 activate
   .get("/activate", activateAcc)
-  .post("/reset_password", validate(PasswordMiddleware), resetPassword);
+  .post("/recovery", validate(PasswordMiddleware), resetPassword);
 
 async function activateAcc(ctx) {
   const params = ctx.request.query;
