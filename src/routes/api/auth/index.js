@@ -33,7 +33,7 @@ auth
   .post("/login", validate(AuthMiddleware), login);
 
 async function logout(ctx) {
-  ctx.logout();
+  ctx.body = "lalal";
 }
 
 async function createUser(ctx) {
@@ -64,7 +64,7 @@ async function login(ctx, next) {
           throw new Error400(err.message);
         }
         const body = { id: user.id, email: user.email };
-        const token = jwt.sign({ user: body }, SECRET, { expiresIn: "24h" });
+        const token = jwt.sign(body, SECRET, { expiresIn: "1m" });
         ctx.set("Authorization", `Bearer ${token}`);
         ctx.body = { token };
         ctx.status = 200;

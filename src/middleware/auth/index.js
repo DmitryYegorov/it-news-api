@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const Error401 = require("../error/Error401");
+const Error401 = require("../error/error401");
 
 const { SECRET } = process.env;
 
@@ -8,13 +8,20 @@ async function isAuthenticated(ctx, next) {
   if (ctx.method === "OPTIONS") {
     return next();
   }
-  if (!ctx.headers.authorization) {
+  try {
+    const token = ctx.headers.authorization.split(" ")[1];
+    if (!token) {
+      throw new Error401();
+    }
+    const decode = await jwt.verify(token, SECRET);
+    if (decode.exp * 1000 < new Date().setDate(new Date().getDate())) {
+      throw new Error401();
+    }
+    ctx.request.body.user = decode;
+    await next();
+  } catch (e) {
     throw new Error401();
   }
-  const token = ctx.headers.authorization.split(" ")[1];
-  const decode = jwt.decode(token, SECRET);
-  ctx.request.body.user = decode.user;
-  return next();
 }
 
 module.exports = isAuthenticated;
