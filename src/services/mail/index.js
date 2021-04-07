@@ -2,6 +2,7 @@ const nodemailer = require("nodemailer");
 const fs = require("fs");
 const path = require("path");
 const Mustache = require("mustache");
+const jwt = require("jsonwebtoken");
 
 const auth = {
   user: process.env.USER_MAIL,
@@ -13,36 +14,72 @@ const transporter = nodemailer.createTransport({
   auth,
 });
 
-const template = fs
-  .readFileSync(path.join(__dirname, "mustache", "templates", "mustache.html"))
+const templateActivate = fs
+  .readFileSync(path.join(__dirname, "mustache", "templates", "activate.html"))
+  .toString();
+const templateNewPass = fs
+  .readFileSync(
+    path.join(__dirname, "mustache", "templates", "newPassword.html")
+  )
   .toString();
 const partials = {
   header: fs
     .readFileSync(path.join(__dirname, "mustache", "partials", "header.html"))
     .toString(),
-  body: fs
-    .readFileSync(path.join(__dirname, "mustache", "partials", "body.html"))
+  activateBody: fs
+    .readFileSync(
+      path.join(__dirname, "mustache", "partials", "activateBody.html")
+    )
+    .toString(),
+  newPassword: fs
+    .readFileSync(
+      path.join(__dirname, "mustache", "partials", "newPasswordBody.html")
+    )
     .toString(),
 };
 
-async function sendNotification(to, subject, data) {
-  const body = Mustache.render(
-    template,
+async function activateEmail(code) {
+  const decoded = jwt.verify(code, process.env.SECRET);
+  const { email, name, id } = decoded;
+  await sendNotification(
+    decoded.email,
+    "Activate your account",
     {
-      ...data,
-      email: to,
-      date: Date.now,
+      email,
+      name,
+      code,
+      id,
     },
-    partials
+    templateActivate
   );
+}
+
+async function newPasswordEmail(code) {
+  const decoded = jwt.verify(code, process.env.SECRET);
+  const { email, name, id } = decoded;
+  await sendNotification(
+    decoded.email,
+    "Update password",
+    {
+      email,
+      name,
+      code,
+      id,
+    },
+    templateNewPass
+  );
+}
+
+async function sendNotification(to, subject, data, body) {
   await transporter.sendMail({
     from: auth.user,
     to,
     subject,
-    html: body,
+    html: Mustache.render(body, data, partials),
   });
 }
 
 module.exports = {
-  sendNotification,
+  activateEmail,
+  newPasswordEmail,
 };
