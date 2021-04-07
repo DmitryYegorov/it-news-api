@@ -12,7 +12,8 @@ async function isAuthenticated(ctx, next) {
     throw new Error401();
   }
   const token = ctx.headers.authorization.split(" ")[1];
-  ctx.request.body.user = jwt.verify(token, SECRET);
+  const decode = jwt.decode(token, SECRET);
+  ctx.request.body.user = decode.user;
   return next();
 }
 

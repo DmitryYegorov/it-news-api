@@ -23,9 +23,9 @@ app.use(
 app.use(helmet());
 app.use(errorHandler());
 app.use(koaLogger());
+app.use(koaBodyParser());
 app.use(passport.initialize());
 app.use(koaJson());
-app.use(koaBodyParser());
 app.use(api.routes());
 app.use(api.allowedMethods());
 app.listen(PORT);

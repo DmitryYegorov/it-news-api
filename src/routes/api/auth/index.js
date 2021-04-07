@@ -20,18 +20,20 @@ const auth = new Router({
 
 auth
   .get("/logout", authenticate, logout)
+  .get("/activate", activateAcc)
   .post("/register", validate(AddUserMiddleware), createUser)
-  .post("/recovery", validate(ResetPasswordMiddleware), resetPassword)
+  .post("/reset", validate(ResetPasswordMiddleware), resetPassword)
   .put(
     "/new-password",
     authenticate,
     validate(UpdatePasswordMiddleware),
     updatePassword
   )
+  .post("/recovery", recovery)
   .post("/login", validate(AuthMiddleware), login);
 
 async function logout(ctx) {
-  await ctx.logout();
+  ctx.logout();
 }
 
 async function createUser(ctx) {
@@ -62,7 +64,7 @@ async function login(ctx, next) {
           throw new Error400(err.message);
         }
         const body = { id: user.id, email: user.email };
-        const token = jwt.sign({ user: body }, SECRET, { expires: "24h" });
+        const token = jwt.sign({ user: body }, SECRET, { expiresIn: "24h" });
         ctx.set("Authorization", `Bearer ${token}`);
         ctx.body = { token };
         ctx.status = 200;
@@ -95,6 +97,31 @@ async function updatePassword(ctx) {
   const data = ctx.request.body;
   await User.updatePassword(data.email, data.oldPassword, data.newPassword);
   ctx.status = 200;
+}
+
+async function activateAcc(ctx) {
+  const params = ctx.request.query;
+  if ((Date.now() - +params.created) / 3600000 <= 24) {
+    await User.activateAccount(params.user, +params.code);
+    ctx.body = "Your account activated!";
+    ctx.status = 200;
+  } else {
+    ctx.body = "Activation period expired!";
+    ctx.status = 400;
+  }
+}
+
+async function recovery(ctx) {
+  const params = ctx.request.query;
+  const { password } = ctx.request.body;
+  if ((Date.now() - +params.created) / 3600000 <= 24) {
+    await User.resetPassword(params.user, password, +params.code);
+    ctx.body = "Your password updated!";
+    ctx.status = 200;
+  } else {
+    ctx.body = "Activation period expired!";
+    ctx.status = 400;
+  }
 }
 
 module.exports = auth;

@@ -1,5 +1,6 @@
 const Router = require("koa-router");
 const Comment = require("../../../entities/comment");
+const authenticated = require("../../../middleware/auth");
 
 const comments = new Router({
   prefix: "/comments",
@@ -8,9 +9,9 @@ const comments = new Router({
 comments
   .get("/:id", getCommentById)
   .get("/post/:post", getCommentsByPost)
-  .post("/", createComment)
-  .put("/:id", updateComment)
-  .delete("/:id", removeComment);
+  .post("/", authenticated, createComment)
+  .put("/:id", authenticated, updateComment)
+  .delete("/:id", authenticated, removeComment);
 
 async function getCommentById(ctx) {
   const { id } = ctx.request.params;

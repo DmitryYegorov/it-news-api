@@ -1,5 +1,6 @@
 const Router = require("koa-router");
 const Post = require("../../../entities/post");
+const authenticated = require("../../../middleware/auth");
 
 const posts = new Router({
   prefix: "/posts",
@@ -10,9 +11,9 @@ posts
   .get("/:id", getPostById)
   .get("/category/:category", getPostsByCategory)
   .get("/author/:author", getPostsByAuthor)
-  .post("/", createPost)
-  .put("/:id", updatePost)
-  .delete("/:id", removePost);
+  .post("/", authenticated, createPost)
+  .put("/:id", authenticated, updatePost)
+  .delete("/:id", authenticated, removePost);
 
 async function getAllPosts(ctx) {
   ctx.body = await Post.getAllPosts();
@@ -38,10 +39,15 @@ async function getPostsByAuthor(ctx) {
 }
 
 async function createPost(ctx) {
-  const post = ctx.request.body;
-  const res = await Post.createPost(post);
+  const { categoryId, title, text, user } = ctx.request.body;
+  const post = {
+    categoryId,
+    title,
+    text,
+    author: user.id,
+  };
+  await Post.createPost(post);
   ctx.status = 201;
-  ctx.body = res;
 }
 
 async function updatePost(ctx) {
