@@ -24,6 +24,10 @@ const AuthMiddleware = yup.object().shape({
   password: yup.string().trim().min(8).max(24).required(),
 });
 
+const PasswordMiddleware = yup.object().shape({
+  password: yup.string().trim().min(8).max(24).required(),
+});
+
 const ResetPasswordMiddleware = yup.object().shape({
   email: yup.string().trim().email().required(),
 });
@@ -49,5 +53,6 @@ module.exports = {
   UpdatePasswordMiddleware,
   AuthMiddleware,
   ResetPasswordMiddleware,
+  PasswordMiddleware,
   validate,
 };

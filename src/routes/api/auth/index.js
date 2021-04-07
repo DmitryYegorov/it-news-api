@@ -8,6 +8,7 @@ const {
   UpdatePasswordMiddleware,
   AuthMiddleware,
   ResetPasswordMiddleware,
+  PasswordMiddleware,
   validate,
 } = require("../users/validate");
 const Error400 = require("../../../middleware/error/error400");
@@ -30,7 +31,7 @@ auth
     validate(UpdatePasswordMiddleware),
     updatePassword
   )
-  .post("/recovery", recovery)
+  .post("/recovery", validate(PasswordMiddleware), recovery)
   .post("/login", validate(AuthMiddleware), login);
 
 async function logout(ctx) {
@@ -70,8 +71,9 @@ async function login(ctx, next) {
 
 async function resetPassword(ctx) {
   const { email } = ctx.request.body;
-  if (await User.emailExists(email)) {
-    const code = await Auth.resetPassword(email);
+  const user = await User.getUserByEmail(email);
+  if (user) {
+    const code = await Auth.resetPassword(user);
     await newPasswordEmail(code);
     ctx.status = 200;
   } else {
@@ -97,16 +99,14 @@ async function activateAcc(ctx) {
 }
 
 async function recovery(ctx) {
-  const params = ctx.request.query;
+  const { code } = ctx.request.query;
   const { password } = ctx.request.body;
-  if ((Date.now() - +params.created) / 3600000 <= 24) {
-    await User.resetPassword(params.user, password, +params.code);
-    ctx.body = "Your password updated!";
-    ctx.status = 200;
-  } else {
-    ctx.body = "Activation period expired!";
-    ctx.status = 400;
+  const { id, exp } = await jwt.verify(code, SECRET);
+  if (exp * 1000 < Date.now()) {
+    throw new Error400("Invalid link!");
   }
+  await User.resetPassword(id, password, code);
+  ctx.status = 204;
 }
 
 module.exports = auth;

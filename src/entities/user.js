@@ -6,7 +6,8 @@ const Error404 = require("../middleware/error/error404");
 const Error400 = require("../middleware/error/error400");
 
 async function createUser(user) {
-  if (await emailExists(user.email)) {
+  const result = await getUserByEmail(user.email);
+  if (result) {
     throw new Error400("You cannot use this email");
   }
   const code = jwt.sign(
@@ -50,7 +51,7 @@ async function updateUser(id, data) {
     }
     if (key === "email") {
       // eslint-disable-next-line no-await-in-loop
-      if (await emailExists(data.email)) {
+      if (await getUserByEmail(result.email)) {
         throw new Error400("You cannot use this email");
       }
     }
@@ -72,44 +73,20 @@ async function activateAccount(code) {
   await User.query().update({ activationCode: null }).findById(result.id);
 }
 
-async function emailExists(email) {
-  const result = await User.query()
-    .where({
-      email,
-    })
-    .select()
-    .first();
-  return !!result;
-}
-
 async function getUserByEmail(email) {
   return User.query().where({ email }).select().first();
 }
 
-async function resetPasswordReq(user) {
-  if (!(await emailExists(user.email))) {
-    throw new Error400("User with that email not exists!");
-  }
-  const code = generateCode();
-  await User.query()
-    .update({ recoveryPasswordCode: code })
-    .where({ email: user.email });
-  return code;
-}
-
-async function resetPassword(email, newPassword, code) {
+async function resetPassword(id, newPassword, code) {
   const salt = bcrypt.genSaltSync();
   const hash = bcrypt.hashSync(newPassword, salt);
-  const result = await getUserByEmail(email);
-  if (!result) {
-    throw new Error404("User not exist");
-  }
-  if (code !== result.recoveryPasswordCode) {
-    throw new Error400("Invalid activation link!");
+  const user = await getUserById(id);
+  if (code !== user.recoveryPasswordCode) {
+    throw new Error400("Invalid link!");
   }
   await User.query()
     .update({ recoveryPasswordCode: null, password: hash })
-    .findById(result.id);
+    .findById(id);
 }
 
 async function updatePassword(email, oldPassowrd, newPassword) {
@@ -125,28 +102,12 @@ async function updatePassword(email, oldPassowrd, newPassword) {
   await User.query().update({ password: hash }).where({ email });
 }
 
-function generateCode() {
-  let code = 0;
-  // eslint-disable-next-line no-plusplus
-  for (let i = 1; i <= 6; i++) {
-    let num = Math.floor(Math.random() * Math.floor(10));
-    if (num === 0) {
-      num = 9;
-    }
-    code *= 10;
-    code += num;
-  }
-  return code;
-}
-
 module.exports = {
   createUser,
   getUserById,
   getAllUsers,
   updateUser,
   activateAccount,
-  emailExists,
-  resetPasswordReq,
   getUserByEmail,
   resetPassword,
   updatePassword,

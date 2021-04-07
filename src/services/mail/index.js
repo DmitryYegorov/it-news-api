@@ -31,7 +31,7 @@ const partials = {
       path.join(__dirname, "mustache", "partials", "activateBody.html")
     )
     .toString(),
-  newPassword: fs
+  newPasswordBody: fs
     .readFileSync(
       path.join(__dirname, "mustache", "partials", "newPasswordBody.html")
     )
