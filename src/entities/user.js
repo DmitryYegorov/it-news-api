@@ -5,20 +5,16 @@ const User = require("../models/user");
 const Error404 = require("../middleware/error/error404");
 const Error400 = require("../middleware/error/error400");
 
-const { SECRET } = process.env;
+const { SECRET, JwtExp } = process.env;
 
 async function createUser(user) {
   const result = await getUserByEmail(user.email);
   if (result) {
     throw new Error400("You cannot use this email");
   }
-  const code = jwt.sign(
-    { name: user.name, email: user.email },
-    process.env.SECRET,
-    {
-      expiresIn: "24h",
-    }
-  );
+  const code = jwt.sign({ name: user.name, email: user.email }, SECRET, {
+    expiresIn: JwtExp,
+  });
   const salt = bcrypt.genSaltSync();
   const hash = bcrypt.hashSync(user.password, salt);
   await User.query().insert({
