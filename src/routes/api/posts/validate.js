@@ -5,7 +5,7 @@ const Error404 = require("../../../middleware/error/error404");
 const PostMiddleware = yup.object().shape({
   title: yup.string().trim().max(255).required(),
   text: yup.string().trim().required(),
-  categoryId: yup.integer().required(),
+  categoryId: yup.number().required(),
 });
 
 function validate(schema) {

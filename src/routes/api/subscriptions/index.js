@@ -11,17 +11,12 @@ subscription
   .post("/", authenticated, validate(SubscribeMiddleware), createSubscription)
   .get("/user/:user", getSubscriptionsByUser)
   .get("/author/:author", getSubscribers)
-  .delete(
-    "/:id",
-    authenticated,
-    validate(SubscribeMiddleware),
-    removeSubscribe
-  );
+  .delete("/author/:author", authenticated, removeSubscribe);
 
 async function createSubscription(ctx) {
   const { user, author } = ctx.request.body;
   const data = {
-    subscriber: user.id,
+    subscriber: user,
     author,
   };
   await Subscription.createSubscription(data);
@@ -41,8 +36,9 @@ async function getSubscribers(ctx) {
 }
 
 async function removeSubscribe(ctx) {
-  const { user, author } = ctx.request.body;
-  await Subscription.removeSubscription(user.id, author);
+  const { author } = ctx.request.params;
+  const { user } = ctx.request.body;
+  await Subscription.removeSubscription(user, author);
   ctx.status = 204;
 }
 

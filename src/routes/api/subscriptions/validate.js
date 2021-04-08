@@ -3,7 +3,7 @@ const Error400 = require("../../../middleware/error/error400");
 const Error404 = require("../../../middleware/error/error404");
 
 const SubscribeMiddleware = yup.object().shape({
-  author: yup.integer().required(),
+  author: yup.number().required(),
 });
 
 function validate(schema) {

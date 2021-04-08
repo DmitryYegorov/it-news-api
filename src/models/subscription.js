@@ -17,8 +17,8 @@ class SubscriptionModel extends Model {
 
       properties: {
         id: { type: "integer" },
-        subscriber: { type: "string", minLength: 5, maxLength: 60 },
-        author: { type: "string", minLength: 5, maxLength: 60 },
+        subscriber: { type: "integer" },
+        author: { type: "integer" },
       },
     };
   }

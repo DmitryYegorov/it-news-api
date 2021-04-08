@@ -8,18 +8,14 @@ async function isAuthenticated(ctx, next) {
   if (ctx.method === "OPTIONS") {
     return next();
   }
+  // eslint-disable-next-line no-useless-catch
   try {
     const token = ctx.headers.authorization.split(" ")[1];
     if (!token) {
       throw new Error401();
     }
-    const decode = await jwt.verify(token, SECRET, {}, (err) => {
-      if (err) {
-        throw new Error401();
-      }
-    });
-    ctx.request.body.user = decode;
-    await next();
+    ctx.request.body.user = jwt.verify(token, SECRET).id;
+    return next();
   } catch (e) {
     throw new Error401();
   }
