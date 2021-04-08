@@ -5,14 +5,20 @@ const User = require("../models/user");
 const Error404 = require("../middleware/error/error404");
 const Error400 = require("../middleware/error/error400");
 
+const { SECRET } = process.env;
+
 async function createUser(user) {
   const result = await getUserByEmail(user.email);
   if (result) {
     throw new Error400("You cannot use this email");
   }
-  const code = jwt.sign({ email: user.email }, process.env.SECRET, {
-    expiresIn: "24h",
-  });
+  const code = jwt.sign(
+    { name: user.name, email: user.email },
+    process.env.SECRET,
+    {
+      expiresIn: "24h",
+    }
+  );
   const salt = bcrypt.genSaltSync();
   const hash = bcrypt.hashSync(user.password, salt);
   await User.query().insert({
@@ -73,16 +79,17 @@ async function getUserByEmail(email) {
   return User.query().where({ email }).select().first();
 }
 
-async function resetPassword(id, newPassword, code) {
+async function resetPassword(newPassword, code) {
   const salt = bcrypt.genSaltSync();
   const hash = bcrypt.hashSync(newPassword, salt);
-  const user = await getUserById(id);
+  const { email } = await jwt.decode(code, SECRET);
+  const user = await getUserByEmail(email);
   if (code !== user.recoveryPasswordCode) {
     throw new Error400("Invalid link!");
   }
   await User.query()
     .update({ recoveryPasswordCode: null, password: hash })
-    .findById(id);
+    .findById(user.id);
 }
 
 async function updatePassword(email, oldPassowrd, newPassword) {

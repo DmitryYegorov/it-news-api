@@ -14,6 +14,8 @@ const transporter = nodemailer.createTransport({
   auth,
 });
 
+const { SECRET } = process.env;
+
 const templateActivate = fs
   .readFileSync(path.join(__dirname, "mustache", "templates", "activate.html"))
   .toString();
@@ -38,48 +40,25 @@ const partials = {
     .toString(),
 };
 
-async function activateEmail(code) {
-  const decoded = jwt.verify(code, process.env.SECRET);
-  const { email, name, id } = decoded;
-  await sendNotification(
-    decoded.email,
-    "Activate your account",
-    {
-      email,
-      name,
-      code,
-      id,
-    },
-    templateActivate
-  );
-}
-
-async function newPasswordEmail(code) {
-  const decoded = jwt.verify(code, process.env.SECRET);
-  const { email, name, id } = decoded;
-  await sendNotification(
-    decoded.email,
-    "Update password",
-    {
-      email,
-      name,
-      code,
-      id,
-    },
-    templateNewPass
-  );
-}
-
-async function sendNotification(to, subject, data, body) {
+async function sendNotification(code, type) {
+  const { email, name } = await jwt.decode(code, SECRET);
+  const body = type === "activate" ? templateActivate : templateNewPass;
+  const subject = type === "activate" ? "Activate account" : "Update password";
   await transporter.sendMail({
-    from: auth.user,
-    to,
+    from: "IT-news <dmitrii.egorow2014@yandex.ru>",
+    to: email,
     subject,
-    html: Mustache.render(body, data, partials),
+    html: Mustache.render(
+      body,
+      {
+        name,
+        code,
+      },
+      partials
+    ),
   });
 }
 
 module.exports = {
-  activateEmail,
-  newPasswordEmail,
+  sendNotification,
 };

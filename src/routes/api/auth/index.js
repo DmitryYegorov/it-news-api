@@ -12,7 +12,7 @@ const {
   validate,
 } = require("./validate");
 const Error400 = require("../../../middleware/error/error400");
-const { activateEmail, newPasswordEmail } = require("../../../services/mail");
+const { sendNotification } = require("../../../services/mail");
 const authenticate = require("../../../middleware/auth");
 
 const { SECRET, JwtExp } = process.env;
@@ -42,7 +42,7 @@ async function logout(ctx) {
 async function createUser(ctx) {
   const user = ctx.request.body;
   const code = await User.createUser(user);
-  await activateEmail(code);
+  await sendNotification(code, "activate");
   ctx.status = 201;
 }
 
@@ -75,7 +75,7 @@ async function resetPassword(ctx) {
   const user = await User.getUserByEmail(email);
   if (user) {
     const code = await Auth.resetPassword(user);
-    await newPasswordEmail(code);
+    await sendNotification(code, "password");
     ctx.status = 200;
   } else {
     throw new Error400("User with that email not exists");
@@ -103,12 +103,12 @@ async function activateAccount(ctx) {
 async function recovery(ctx) {
   const { code } = ctx.request.query;
   const { password } = ctx.request.body;
-  const { id } = await jwt.verify(code, SECRET, {}, (err) => {
+  await jwt.verify(code, SECRET, {}, (err) => {
     if (err) {
       throw new Error400("Invalid link!");
     }
   });
-  await User.resetPassword(id, password, code);
+  await User.resetPassword(password, code);
   ctx.status = 204;
 }
 
