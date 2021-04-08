@@ -10,19 +10,19 @@ const {
   ResetPasswordMiddleware,
   PasswordMiddleware,
   validate,
-} = require("../users/validate");
+} = require("./validate");
 const Error400 = require("../../../middleware/error/error400");
 const { activateEmail, newPasswordEmail } = require("../../../services/mail");
 const authenticate = require("../../../middleware/auth");
 
-const { SECRET } = process.env;
+const { SECRET, JwtExp } = process.env;
 const auth = new Router({
   prefix: "/auth",
 });
 
 auth
   .get("/logout", authenticate, logout)
-  .get("/activate", activateAcc)
+  .get("/activate", activateAccount)
   .post("/register", validate(AddUserMiddleware), createUser)
   .post("/reset", validate(ResetPasswordMiddleware), resetPassword)
   .put(
@@ -35,7 +35,8 @@ auth
   .post("/login", validate(AuthMiddleware), login);
 
 async function logout(ctx) {
-  ctx.body = "lalal";
+  await ctx.logout();
+  ctx.status = 204;
 }
 
 async function createUser(ctx) {
@@ -59,7 +60,7 @@ async function login(ctx, next) {
           throw new Error400(err.message);
         }
         const body = { id: user.id, email: user.email };
-        const token = jwt.sign(body, SECRET, { expiresIn: "24h" });
+        const token = jwt.sign(body, SECRET, { expiresIn: JwtExp });
         ctx.set("Authorization", `Bearer ${token}`);
         ctx.body = token;
         ctx.status = 200;
@@ -87,12 +88,13 @@ async function updatePassword(ctx) {
   ctx.status = 200;
 }
 
-async function activateAcc(ctx) {
+async function activateAccount(ctx) {
   const { code } = ctx.request.query;
-  const decoded = jwt.verify(code, SECRET);
-  if (decoded.exp * 1000 < Date.now()) {
-    throw new Error400("Invalid link activation!");
-  }
+  await jwt.verify(code, SECRET, {}, (err) => {
+    if (err) {
+      throw new Error400("Invalid link activation!");
+    }
+  });
   await User.activateAccount(code);
   ctx.body = "Your account activated!";
   ctx.status = 200;
@@ -101,10 +103,11 @@ async function activateAcc(ctx) {
 async function recovery(ctx) {
   const { code } = ctx.request.query;
   const { password } = ctx.request.body;
-  const { id, exp } = await jwt.verify(code, SECRET);
-  if (exp * 1000 < Date.now()) {
-    throw new Error400("Invalid link!");
-  }
+  const { id } = await jwt.verify(code, SECRET, {}, (err) => {
+    if (err) {
+      throw new Error400("Invalid link!");
+    }
+  });
   await User.resetPassword(id, password, code);
   ctx.status = 204;
 }

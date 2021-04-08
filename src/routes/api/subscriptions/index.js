@@ -1,19 +1,29 @@
 const Router = require("koa-router");
 const Subscription = require("../../../entities/subscriptions");
 const authenticated = require("../../../middleware/auth");
+const { SubscribeMiddleware, validate } = require("./validate");
 
 const subscription = new Router({
   prefix: "/subscriptions",
 });
 
 subscription
-  .post("/", authenticated, createSubscription)
+  .post("/", authenticated, validate(SubscribeMiddleware), createSubscription)
   .get("/user/:user", getSubscriptionsByUser)
   .get("/author/:author", getSubscribers)
-  .delete("/:id", authenticated, removeSubscribe);
+  .delete(
+    "/:id",
+    authenticated,
+    validate(SubscribeMiddleware),
+    removeSubscribe
+  );
 
 async function createSubscription(ctx) {
-  const data = ctx.request.body;
+  const { user, author } = ctx.request.body;
+  const data = {
+    subscriber: user.id,
+    author,
+  };
   await Subscription.createSubscription(data);
   ctx.status = 201;
 }
@@ -31,8 +41,8 @@ async function getSubscribers(ctx) {
 }
 
 async function removeSubscribe(ctx) {
-  const { id } = ctx.request.body;
-  await Subscription.removeSubscription(id);
+  const { user, author } = ctx.request.body;
+  await Subscription.removeSubscription(user.id, author);
   ctx.status = 204;
 }
 

@@ -32,12 +32,16 @@ async function createComment(data) {
   await Comment.query().insert(data);
 }
 
-async function updateComment(id, data) {
+async function updateComment(id, text) {
   const comment = await Comment.query().findById(id);
   if (!comment) {
     throw new Error404("Comment not exists");
   }
-  await Comment.query().findById(id).patch(data);
+  await Comment.query()
+    .update({
+      text,
+    })
+    .findById(id);
 }
 
 async function removeComment(id) {

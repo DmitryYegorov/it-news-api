@@ -1,5 +1,7 @@
 const Router = require("koa-router");
 const Category = require("../../../entities/category");
+const { CategoryMiddleware, validate } = require("./validate");
+const authenticated = require("../../../middleware/auth");
 
 const categories = new Router({
   prefix: "/categories",
@@ -8,9 +10,9 @@ const categories = new Router({
 categories
   .get("/", getAllCategories)
   .get("/:id", getCategoryById)
-  .post("/", createCategory)
-  .put("/:id", updateCategory)
-  .delete("/:id", removeCategory);
+  .post("/", authenticated, validate(CategoryMiddleware), createCategory)
+  .put("/:id", authenticated, validate(CategoryMiddleware), updateCategory)
+  .delete("/:id", authenticated, removeCategory);
 
 async function getAllCategories(ctx) {
   ctx.body = await Category.getAllCategories();
@@ -25,20 +27,20 @@ async function getCategoryById(ctx) {
 
 async function createCategory(ctx) {
   const category = ctx.request.body;
-  ctx.body = await Category.createCategory(category);
+  await Category.createCategory(category);
   ctx.status = 201;
 }
 
 async function updateCategory(ctx) {
   const data = ctx.request.body;
   const { id } = ctx.request.params;
-  ctx.body = await Category.updateCategory(id, data);
-  ctx.status = 200;
+  await Category.updateCategory(id, data);
+  ctx.status = 204;
 }
 
 async function removeCategory(ctx) {
   const { id } = ctx.request.params;
-  ctx.body = await Category.removeCategoryById(id);
+  await Category.removeCategoryById(id);
   ctx.status = 204;
 }
 

@@ -2,9 +2,12 @@ const yup = require("yup");
 const Error404 = require("../../../middleware/error/error404");
 const Error400 = require("../../../middleware/error/error400");
 
-const UpdateUserMiddleware = yup.object().shape({
-  name: yup.string().trim(),
-  email: yup.string().trim().email(),
+const AddCommentMiddleware = yup.object().shape({
+  text: yup.string().trim().required(),
+});
+
+const UpdateCommentMiddleware = yup.object().shape({
+  text: yup.string().trim().required(),
 });
 
 function validate(schema) {
@@ -23,6 +26,7 @@ function validate(schema) {
 }
 
 module.exports = {
-  UpdateUserMiddleware,
   validate,
+  AddCommentMiddleware,
+  UpdateCommentMiddleware,
 };

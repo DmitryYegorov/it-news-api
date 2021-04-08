@@ -30,12 +30,17 @@ async function createSubscription(data) {
   await Subscription.query().insert(data);
 }
 
-async function removeSubscription(id) {
-  const result = await Subscription.query().findById(id);
+async function removeSubscription(subscriber, author) {
+  const result = await Subscription.query()
+    .where({
+      author,
+      subscriber,
+    })
+    .first();
   if (!result) {
     throw new Error404();
   }
-  await Subscription.query().findById(id).delete();
+  await Subscription.query().findById(result.id).delete();
 }
 
 module.exports = {

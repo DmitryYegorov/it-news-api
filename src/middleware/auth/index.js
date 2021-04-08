@@ -13,10 +13,11 @@ async function isAuthenticated(ctx, next) {
     if (!token) {
       throw new Error401();
     }
-    const decode = await jwt.verify(token, SECRET);
-    if (decode.exp * 1000 < new Date().setDate(new Date().getDate())) {
-      throw new Error401();
-    }
+    const decode = await jwt.verify(token, SECRET, {}, (err) => {
+      if (err) {
+        throw new Error401();
+      }
+    });
     ctx.request.body.user = decode;
     await next();
   } catch (e) {
