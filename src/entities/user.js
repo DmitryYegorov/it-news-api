@@ -10,13 +10,9 @@ async function createUser(user) {
   if (result) {
     throw new Error400("You cannot use this email");
   }
-  const code = jwt.sign(
-    { id: user.id, email: user.email },
-    process.env.SECRET,
-    {
-      expiresIn: "24h",
-    }
-  );
+  const code = jwt.sign({ email: user.email }, process.env.SECRET, {
+    expiresIn: "24h",
+  });
   const salt = bcrypt.genSaltSync();
   const hash = bcrypt.hashSync(user.password, salt);
   await User.query().insert({
