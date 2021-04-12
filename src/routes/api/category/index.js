@@ -38,6 +38,7 @@ async function getCategoryById(ctx) {
 
 async function createCategory(ctx) {
   const { name } = ctx.request.body;
+  console.log(ctx.state.user);
   await Category.createCategory({ name });
   ctx.status = 201;
 }
