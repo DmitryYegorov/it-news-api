@@ -40,12 +40,11 @@ async function getCommentsByPost(ctx) {
 
 async function createComment(ctx) {
   const { postId, text, user } = ctx.request.body;
-  const comment = {
+  await Comment.createComment({
     postId,
     text,
     author: user.id,
-  };
-  await Comment.createComment(comment);
+  });
   ctx.status = 201;
 }
 

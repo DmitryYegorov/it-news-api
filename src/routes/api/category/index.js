@@ -15,7 +15,7 @@ const categories = new Router({
 categories
   .get("/", getAllCategories)
   .get("/:id", validateQuery(IdMiddleware), getCategoryById)
-  .post("/", validateBody(CategoryMiddleware), createCategory)
+  .post("/", authenticated, validateBody(CategoryMiddleware), createCategory)
   .put(
     "/:id",
     authenticated,

@@ -58,13 +58,12 @@ async function getPostsByAuthor(ctx) {
 
 async function createPost(ctx) {
   const { categoryId, title, text, user } = ctx.request.body;
-  const post = {
+  await Post.createPost({
     categoryId,
     title,
     text,
     author: user.id,
-  };
-  await Post.createPost(post);
+  });
   ctx.status = 201;
 }
 

@@ -31,11 +31,10 @@ subscription
 
 async function createSubscription(ctx) {
   const { user, author } = ctx.request.body;
-  const data = {
+  await Subscription.createSubscription({
     subscriber: user,
     author,
-  };
-  await Subscription.createSubscription(data);
+  });
   ctx.status = 201;
 }
 
