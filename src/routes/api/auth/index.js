@@ -9,7 +9,9 @@ const {
   AuthMiddleware,
   ResetPasswordMiddleware,
   PasswordMiddleware,
-  validate,
+  CodeMiddleware,
+  validateBody,
+  validateQuery,
 } = require("./validate");
 const Error400 = require("../../../middleware/error/error400");
 const { sendNotification } = require("../../../services/mail");
@@ -22,17 +24,22 @@ const auth = new Router({
 
 auth
   .get("/logout", authenticate, logout)
-  .get("/activate", activateAccount)
-  .post("/register", validate(AddUserMiddleware), createUser)
-  .post("/reset", validate(ResetPasswordMiddleware), resetPassword)
+  .get("/activate/:code", validateQuery(CodeMiddleware), activateAccount)
+  .post("/register", validateBody(AddUserMiddleware), createUser)
+  .post("/reset", validateBody(ResetPasswordMiddleware), resetPassword)
   .put(
     "/new-password",
     authenticate,
-    validate(UpdatePasswordMiddleware),
+    validateBody(UpdatePasswordMiddleware),
     updatePassword
   )
-  .post("/recovery", validate(PasswordMiddleware), recovery)
-  .post("/login", validate(AuthMiddleware), login);
+  .post(
+    "/recovery/:code",
+    validateQuery(CodeMiddleware),
+    validateBody(PasswordMiddleware),
+    recovery
+  )
+  .post("/login", validateBody(AuthMiddleware), login);
 
 async function logout(ctx) {
   await ctx.logout();
@@ -89,7 +96,7 @@ async function updatePassword(ctx) {
 }
 
 async function activateAccount(ctx) {
-  const { code } = ctx.request.query;
+  const { code } = ctx.request.params;
   await jwt.verify(code, SECRET, {}, (err) => {
     if (err) {
       throw new Error400("Invalid link activation!");
@@ -101,7 +108,7 @@ async function activateAccount(ctx) {
 }
 
 async function recovery(ctx) {
-  const { code } = ctx.request.query;
+  const { code } = ctx.request.params;
   const { password } = ctx.request.body;
   await jwt.verify(code, SECRET, {}, (err) => {
     if (err) {

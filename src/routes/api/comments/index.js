@@ -4,7 +4,9 @@ const authenticated = require("../../../middleware/auth");
 const {
   AddCommentMiddleware,
   UpdateCommentMiddleware,
-  validate,
+  IdMiddleware,
+  validateBody,
+  validateQuery,
 } = require("./validate");
 
 const comments = new Router({
@@ -14,9 +16,15 @@ const comments = new Router({
 comments
   .get("/:id", getCommentById)
   .get("/post/:post", getCommentsByPost)
-  .post("/", authenticated, validate(AddCommentMiddleware), createComment)
-  .put("/:id", authenticated, validate(UpdateCommentMiddleware), updateComment)
-  .delete("/:id", authenticated, removeComment);
+  .post("/", authenticated, validateBody(AddCommentMiddleware), createComment)
+  .put(
+    "/:id",
+    authenticated,
+    validateQuery(IdMiddleware),
+    validateBody(UpdateCommentMiddleware),
+    updateComment
+  )
+  .delete("/:id", authenticated, validateQuery(IdMiddleware), removeComment);
 
 async function getCommentById(ctx) {
   const { id } = ctx.request.params;

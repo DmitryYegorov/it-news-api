@@ -1,6 +1,11 @@
 const Router = require("koa-router");
 const Category = require("../../../entities/category");
-const { CategoryMiddleware, validate } = require("./validate");
+const {
+  CategoryMiddleware,
+  IdMiddleware,
+  validateBody,
+  validateQuery,
+} = require("./validate");
 const authenticated = require("../../../middleware/auth");
 
 const categories = new Router({
@@ -9,10 +14,16 @@ const categories = new Router({
 
 categories
   .get("/", getAllCategories)
-  .get("/:id", getCategoryById)
-  .post("/", authenticated, validate(CategoryMiddleware), createCategory)
-  .put("/:id", authenticated, validate(CategoryMiddleware), updateCategory)
-  .delete("/:id", authenticated, removeCategory);
+  .get("/:id", validateQuery(IdMiddleware), getCategoryById)
+  .post("/", validateBody(CategoryMiddleware), createCategory)
+  .put(
+    "/:id",
+    authenticated,
+    validateQuery(IdMiddleware),
+    validateBody(CategoryMiddleware),
+    updateCategory
+  )
+  .delete("/:id", authenticated, validateQuery(IdMiddleware), removeCategory);
 
 async function getAllCategories(ctx) {
   ctx.body = await Category.getAllCategories();
