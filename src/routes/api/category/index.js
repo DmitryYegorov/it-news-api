@@ -37,15 +37,15 @@ async function getCategoryById(ctx) {
 }
 
 async function createCategory(ctx) {
-  const category = ctx.request.body;
-  await Category.createCategory(category);
+  const { name } = ctx.request.body;
+  await Category.createCategory({ name });
   ctx.status = 201;
 }
 
 async function updateCategory(ctx) {
-  const data = ctx.request.body;
+  const { name } = ctx.request.body;
   const { id } = ctx.request.params;
-  await Category.updateCategory(id, data);
+  await Category.updateCategory(id, { name });
   ctx.status = 204;
 }
 

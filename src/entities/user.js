@@ -101,6 +101,14 @@ async function updatePassword(email, oldPassowrd, newPassword) {
   await User.query().update({ password: hash }).where({ email });
 }
 
+async function removeUserById(id) {
+  const user = await getUserById(id);
+  if (!user) {
+    throw new Error400("User not exists");
+  }
+  await User.query().findById(id).delete();
+}
+
 module.exports = {
   createUser,
   getUserById,
@@ -110,4 +118,5 @@ module.exports = {
   getUserByEmail,
   resetPassword,
   updatePassword,
+  removeUserById,
 };

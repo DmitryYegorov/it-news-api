@@ -1,5 +1,6 @@
 const Router = require("koa-router");
 const Subscription = require("../../../entities/subscriptions");
+const User = require("../../../entities/user");
 const authenticated = require("../../../middleware/auth");
 const {
   SubscribeMiddleware,
@@ -39,14 +40,16 @@ async function createSubscription(ctx) {
 }
 
 async function getSubscriptionsByUser(ctx) {
-  const { user } = ctx.request.params;
-  ctx.body = await Subscription.getSubscriptionsByUser(user);
+  const { params } = ctx.request;
+  const user = await User.getUserById(params.user);
+  ctx.body = await Subscription.getSubscriptionsByUser(user.id);
   ctx.status = 200;
 }
 
 async function getSubscribers(ctx) {
-  const { author } = ctx.request.params;
-  ctx.body = await Subscription.getSubscribersByAuthor(author);
+  const { params } = ctx.request;
+  const author = await User.getUserById(params.author);
+  ctx.body = await Subscription.getSubscribersByAuthor(author.id);
   ctx.status = 200;
 }
 

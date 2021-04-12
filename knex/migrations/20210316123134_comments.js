@@ -7,7 +7,7 @@ exports.up = function (knex) {
       .index()
       .references("id")
       .inTable("users")
-      .onDelete("SET NULL");
+      .onDelete("CASCADE");
     table.text("text").notNullable();
     table
       .integer("postId")
@@ -15,7 +15,7 @@ exports.up = function (knex) {
       .index()
       .references("id")
       .inTable("posts")
-      .onDelete("SET NULL");
+      .onDelete("CASCADE");
     table.dateTime("createdAt").notNullable();
     table.dateTime("updatedAt");
   });

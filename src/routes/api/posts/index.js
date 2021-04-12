@@ -62,7 +62,7 @@ async function createPost(ctx) {
     categoryId,
     title,
     text,
-    author: user.id,
+    author: user,
   });
   ctx.status = 201;
 }
