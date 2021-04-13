@@ -50,7 +50,13 @@ async function logout(ctx) {
 async function createUser(ctx) {
   const user = ctx.request.body;
   const code = await User.createUser(user);
-  await sendNotification("Activate your account", "activate", code);
+  await sendNotification(
+    "Activate your account",
+    "activate",
+    code,
+    user.email,
+    user.name
+  );
   ctx.status = 201;
 }
 
@@ -83,7 +89,13 @@ async function resetPassword(ctx) {
   const user = await User.getUserByEmail(email);
   if (user) {
     const code = await Auth.resetPassword(user);
-    await sendNotification("Update password", "newPassword", code);
+    await sendNotification(
+      "Update password",
+      "newPassword",
+      code,
+      user.email,
+      user.name
+    );
     ctx.status = 200;
   } else {
     throw new Error400("User with that email not exists");
@@ -111,11 +123,11 @@ async function activateAccount(ctx) {
 async function recovery(ctx) {
   const { code } = ctx.request.params;
   const { password } = ctx.request.body;
-  await jwt.verify(code, SECRET, {}, (err) => {
-    if (err) {
-      throw new Error400("Invalid link!");
-    }
-  });
+  try {
+    jwt.verify(code, SECRET);
+  } catch (e) {
+    throw new Error401(e.message);
+  }
   await User.resetPassword(password, code);
   ctx.status = 204;
 }

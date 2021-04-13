@@ -2,7 +2,6 @@ const nodemailer = require("nodemailer");
 const fs = require("fs");
 const path = require("path");
 const Mustache = require("mustache");
-const jwt = require("jsonwebtoken");
 
 const auth = {
   user: process.env.USER_MAIL,
@@ -13,8 +12,6 @@ const transporter = nodemailer.createTransport({
   service: "gmail",
   auth,
 });
-
-const { SECRET } = process.env;
 
 const templates = {
   activate: fs
@@ -45,8 +42,7 @@ const partials = {
     .toString(),
 };
 
-async function sendNotification(subject, template, code) {
-  const { email, name } = await jwt.decode(code, SECRET);
+async function sendNotification(subject, template, code, email, name) {
   await transporter.sendMail({
     from: "IT-news <dmitrii.egorow2014@yandex.ru>",
     to: email,
