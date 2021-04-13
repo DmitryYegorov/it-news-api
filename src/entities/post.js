@@ -4,7 +4,16 @@ const CategoryEntity = require("./category");
 const Error400 = require("../middleware/error/error400");
 
 async function getAllPosts() {
-  return Post.query().select();
+  return Post.query()
+    .joinRelated("[author_name, category_name]")
+    .select(
+      "posts.id as id",
+      "author_name.name as author",
+      "category_name.name as category",
+      "posts.title",
+      "posts.text",
+      "posts.createdAt"
+    );
 }
 
 async function getPostById(id) {

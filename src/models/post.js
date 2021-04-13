@@ -26,9 +26,9 @@ class PostModel extends Model {
     };
   }
 
-  static get relationMapping() {
+  static get relationMappings() {
     return {
-      author: {
+      author_name: {
         relation: Model.HasOneRelation,
         modelClass: UserModel,
         join: {
@@ -36,11 +36,11 @@ class PostModel extends Model {
           to: "posts.author",
         },
       },
-      category: {
+      category_name: {
         relation: Model.HasOneRelation,
         modelClass: CategoryModel,
         join: {
-          from: "category.id",
+          from: "categories.id",
           to: "posts.categoryId",
         },
       },
