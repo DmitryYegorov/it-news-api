@@ -16,14 +16,19 @@ const transporter = nodemailer.createTransport({
 
 const { SECRET } = process.env;
 
-const templateActivate = fs
-  .readFileSync(path.join(__dirname, "mustache", "templates", "activate.html"))
-  .toString();
-const templateNewPass = fs
-  .readFileSync(
-    path.join(__dirname, "mustache", "templates", "newPassword.html")
-  )
-  .toString();
+const templates = {
+  activate: fs
+    .readFileSync(
+      path.join(__dirname, "mustache", "templates", "activate.html")
+    )
+    .toString(),
+  newPassword: fs
+    .readFileSync(
+      path.join(__dirname, "mustache", "templates", "newPassword.html")
+    )
+    .toString(),
+};
+
 const partials = {
   header: fs
     .readFileSync(path.join(__dirname, "mustache", "partials", "header.html"))
@@ -40,16 +45,14 @@ const partials = {
     .toString(),
 };
 
-async function sendNotification(code, type) {
+async function sendNotification(subject, template, code) {
   const { email, name } = await jwt.decode(code, SECRET);
-  const body = type === "activate" ? templateActivate : templateNewPass;
-  const subject = type === "activate" ? "Activate account" : "Update password";
   await transporter.sendMail({
     from: "IT-news <dmitrii.egorow2014@yandex.ru>",
     to: email,
     subject,
     html: Mustache.render(
-      body,
+      templates[template],
       {
         name,
         code,

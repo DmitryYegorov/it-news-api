@@ -14,6 +14,7 @@ const {
   validateQuery,
 } = require("./validate");
 const Error400 = require("../../../middleware/error/error400");
+const Error401 = require("../../../middleware/error/error401");
 const { sendNotification } = require("../../../services/mail");
 const authenticate = require("../../../middleware/auth");
 
@@ -49,7 +50,7 @@ async function logout(ctx) {
 async function createUser(ctx) {
   const user = ctx.request.body;
   const code = await User.createUser(user);
-  await sendNotification(code, "activate");
+  await sendNotification("Activate your account", "activate", code);
   ctx.status = 201;
 }
 
@@ -82,7 +83,7 @@ async function resetPassword(ctx) {
   const user = await User.getUserByEmail(email);
   if (user) {
     const code = await Auth.resetPassword(user);
-    await sendNotification(code, "password");
+    await sendNotification("Update password", "newPassword", code);
     ctx.status = 200;
   } else {
     throw new Error400("User with that email not exists");
@@ -97,11 +98,11 @@ async function updatePassword(ctx) {
 
 async function activateAccount(ctx) {
   const { code } = ctx.request.params;
-  await jwt.verify(code, SECRET, {}, (err) => {
-    if (err) {
-      throw new Error400("Invalid link activation!");
-    }
-  });
+  try {
+    jwt.verify(code, SECRET);
+  } catch (e) {
+    throw new Error401(e.message);
+  }
   await User.activateAccount(code);
   ctx.body = "Your account activated!";
   ctx.status = 200;
