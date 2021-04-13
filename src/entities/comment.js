@@ -5,19 +5,35 @@ const Error404 = require("../middleware/error/error404");
 const Error400 = require("../middleware/error/error400");
 
 async function getCommentsByPost(postId) {
-  const post = await Post.query().findById(postId);
-  if (!post) {
-    throw new Error404("Post not exists");
-  }
+  await Post.query().findById(postId);
   return Comment.query()
+    .joinRelated("author_user")
     .where({
       postId,
     })
-    .select();
+    .select(
+      "author_user.name as author",
+      "author_user.email as email",
+      "text",
+      "postId",
+      "comments.createdAt",
+      "comments.updatedAt"
+    );
 }
 
 async function getCommentById(id) {
-  const comment = await Comment.query().findById(id);
+  const comment = await Comment.query()
+    .joinRelated("author_user")
+    .where("comments.id", id)
+    .select(
+      "author_user.name as author",
+      "author_user.email as email",
+      "text",
+      "postId",
+      "comments.createdAt",
+      "comments.updatedAt"
+    )
+    .first();
   if (!comment) {
     throw new Error404("Comment not exists");
   }
