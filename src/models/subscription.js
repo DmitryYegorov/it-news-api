@@ -1,5 +1,4 @@
 const Model = require("./BaseModel");
-const UserModel = require("./user");
 
 class SubscriptionModel extends Model {
   static get tableName() {
@@ -23,24 +22,16 @@ class SubscriptionModel extends Model {
     };
   }
 
-  static get relationMapping() {
+  static get relationMappings() {
+    // eslint-disable-next-line global-require,no-unused-vars
+    const UserModel = require("./user");
     return {
-      subscriber: {
+      subscriptions_users: {
         relation: Model.HasManyRelation,
         modelClass: UserModel,
-
         join: {
-          from: "user.id",
-          to: "subscriptions.subscriber",
-        },
-      },
-      author: {
-        relation: Model.HasManyRelation,
-        modelClass: UserModel,
-
-        join: {
-          from: "user.id",
-          to: "subscriptions.author",
+          from: "subscriptions.subscriber",
+          to: "users.id",
         },
       },
     };

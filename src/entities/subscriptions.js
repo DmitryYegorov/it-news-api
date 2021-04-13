@@ -1,12 +1,13 @@
 const Subscription = require("../models/subscription");
+const User = require("./user");
 const Error404 = require("../middleware/error/error404");
 
 async function getSubscriptionsByUser(userId) {
-  return Subscription.query().select({
-    where: {
-      subscriber: userId,
-    },
-  });
+  await User.getUserById(userId);
+  return Subscription.query()
+    .where("subscriber", userId)
+    .joinRelated("subscriptions_users")
+    .select("name", "email");
 }
 
 async function getSubscribersByAuthor(userId) {

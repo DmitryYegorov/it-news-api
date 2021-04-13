@@ -1,7 +1,6 @@
 const Router = require("koa-router");
 const passport = require("koa-passport");
 const jwt = require("jsonwebtoken");
-const User = require("../../../entities/user");
 const Auth = require("../../../entities/auth");
 const {
   AddUserMiddleware,
@@ -49,7 +48,7 @@ async function logout(ctx) {
 
 async function createUser(ctx) {
   const user = ctx.request.body;
-  const code = await User.createUser(user);
+  const code = await Auth.createUser(user);
   await sendNotification(
     "Activate your account",
     "activate",
@@ -86,7 +85,7 @@ async function login(ctx, next) {
 
 async function resetPassword(ctx) {
   const { email } = ctx.request.body;
-  const user = await User.getUserByEmail(email);
+  const user = await Auth.getUserByEmail(email);
   if (user) {
     const code = await Auth.resetPassword(user);
     await sendNotification(
@@ -104,7 +103,7 @@ async function resetPassword(ctx) {
 
 async function updatePassword(ctx) {
   const data = ctx.request.body;
-  await User.updatePassword(data.email, data.oldPassword, data.newPassword);
+  await Auth.updatePassword(data.email, data.oldPassword, data.newPassword);
   ctx.status = 200;
 }
 
@@ -115,7 +114,7 @@ async function activateAccount(ctx) {
   } catch (e) {
     throw new Error401(e.message);
   }
-  await User.activateAccount(code);
+  await Auth.activateAccount(code);
   ctx.body = "Your account activated!";
   ctx.status = 200;
 }
@@ -128,7 +127,7 @@ async function recovery(ctx) {
   } catch (e) {
     throw new Error401(e.message);
   }
-  await User.resetPassword(password, code);
+  await Auth.resetPassword(password, code);
   ctx.status = 204;
 }
 

@@ -41,8 +41,7 @@ async function createSubscription(ctx) {
 
 async function getSubscriptionsByUser(ctx) {
   const { params } = ctx.request;
-  const user = await User.getUserById(params.user);
-  ctx.body = await Subscription.getSubscriptionsByUser(user.id);
+  ctx.body = await Subscription.getSubscriptionsByUser(params.user);
   ctx.status = 200;
 }
 
