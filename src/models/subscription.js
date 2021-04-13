@@ -30,6 +30,14 @@ class SubscriptionModel extends Model {
         relation: Model.HasManyRelation,
         modelClass: UserModel,
         join: {
+          from: "subscriptions.author",
+          to: "users.id",
+        },
+      },
+      subscribers_user: {
+        relation: Model.HasManyRelation,
+        modelClass: UserModel,
+        join: {
           from: "subscriptions.subscriber",
           to: "users.id",
         },

@@ -11,11 +11,11 @@ async function getSubscriptionsByUser(userId) {
 }
 
 async function getSubscribersByAuthor(userId) {
-  return Subscription.query().select({
-    where: {
-      author: userId,
-    },
-  });
+  await User.getUserById(userId);
+  return Subscription.query()
+    .where("author", userId)
+    .joinRelated("subscribers_user")
+    .select("name", "email");
 }
 
 async function createSubscription(data) {

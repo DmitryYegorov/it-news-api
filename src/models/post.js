@@ -29,7 +29,7 @@ class PostModel extends Model {
   static get relationMapping() {
     return {
       author: {
-        relation: Model.HasManyRelation,
+        relation: Model.HasOneRelation,
         modelClass: UserModel,
         join: {
           from: "users.id",
