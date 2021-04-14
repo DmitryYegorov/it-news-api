@@ -49,13 +49,10 @@ async function logout(ctx) {
 async function createUser(ctx) {
   const user = ctx.request.body;
   const code = await Auth.createUser(user);
-  await sendNotification(
-    "Activate your account",
-    "activate",
+  await sendNotification("Activate your account", "activate", user.email, {
     code,
-    user.email,
-    user.name
-  );
+    name: user.name,
+  });
   ctx.status = 201;
 }
 
@@ -88,13 +85,10 @@ async function resetPassword(ctx) {
   const user = await Auth.getUserByEmail(email);
   if (user) {
     const code = await Auth.resetPassword(user);
-    await sendNotification(
-      "Update password",
-      "newPassword",
+    await sendNotification("Update password", "newPassword", user.email, {
       code,
-      user.email,
-      user.name
-    );
+      name: user.name,
+    });
     ctx.status = 200;
   } else {
     throw new Error400("User with that email not exists");

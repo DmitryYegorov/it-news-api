@@ -40,7 +40,12 @@ async function createUser(user) {
 }
 
 async function activateAccount(code) {
-  const { email } = jwt.verify(code, process.env.SECRET);
+  let email = "";
+  try {
+    email = jwt.verify(code, process.env.SECRET).email;
+  } catch (e) {
+    throw new Error400("Invalid link!");
+  }
   const result = await UserModel.query().where({ email }).select().first();
   if (!result) {
     throw new Error404("User not exist");
@@ -52,12 +57,12 @@ async function activateAccount(code) {
 }
 
 async function updatePassword(email, oldPassowrd, newPassword) {
-  const salt = bcrypt.genSaltSync();
-  const hash = bcrypt.hashSync(newPassword, salt);
   const user = await UserEntity.getUserByEmail(email);
   if (!user) {
     throw new Error400("User with that email not exists!");
   }
+  const salt = bcrypt.genSaltSync();
+  const hash = bcrypt.hashSync(newPassword, salt);
   if (!bcrypt.compareSync(oldPassowrd, user.password)) {
     throw new Error400("Incorrect password!");
   }
@@ -65,13 +70,18 @@ async function updatePassword(email, oldPassowrd, newPassword) {
 }
 
 async function recoveryPassword(newPassword, code) {
-  const salt = bcrypt.genSaltSync();
-  const hash = bcrypt.hashSync(newPassword, salt);
-  const { email } = await jwt.decode(code, SECRET);
+  let email = "";
+  try {
+    email = jwt.verify(code, SECRET).email;
+  } catch (e) {
+    throw new Error400("Invalid link!");
+  }
   const user = await UserEntity.getUserByEmail(email);
   if (code !== user.recoveryPasswordCode) {
     throw new Error400("Invalid link!");
   }
+  const salt = bcrypt.genSaltSync();
+  const hash = bcrypt.hashSync(newPassword, salt);
   await UserModel.query()
     .update({ recoveryPasswordCode: null, password: hash })
     .findById(user.id);
