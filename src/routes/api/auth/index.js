@@ -3,12 +3,12 @@ const passport = require("koa-passport");
 const jwt = require("jsonwebtoken");
 const Auth = require("../../../entities/auth");
 const {
-  AddUserMiddleware,
-  UpdatePasswordMiddleware,
-  AuthMiddleware,
-  ResetPasswordMiddleware,
-  PasswordMiddleware,
-  CodeMiddleware,
+  AddUserSchema,
+  UpdatePasswordSchema,
+  AuthSchema,
+  ResetPasswordSchema,
+  PasswordSchema,
+  CodeSchema,
   validateBody,
   validateQuery,
 } = require("./validate");
@@ -24,22 +24,22 @@ const auth = new Router({
 
 auth
   .get("/logout", authenticate, logout)
-  .get("/activate/:code", validateQuery(CodeMiddleware), activateAccount)
-  .post("/register", validateBody(AddUserMiddleware), createUser)
-  .post("/reset", validateBody(ResetPasswordMiddleware), resetPassword)
+  .get("/activate/:code", validateQuery(CodeSchema), activateAccount)
+  .post("/register", validateBody(AddUserSchema), createUser)
+  .post("/reset", validateBody(ResetPasswordSchema), resetPassword)
   .put(
     "/new-password",
     authenticate,
-    validateBody(UpdatePasswordMiddleware),
+    validateBody(UpdatePasswordSchema),
     updatePassword
   )
   .post(
     "/recovery/:code",
-    validateQuery(CodeMiddleware),
-    validateBody(PasswordMiddleware),
+    validateQuery(CodeSchema),
+    validateBody(PasswordSchema),
     recovery
   )
-  .post("/login", validateBody(AuthMiddleware), login);
+  .post("/login", validateBody(AuthSchema), login);
 
 async function logout(ctx) {
   await ctx.logout();
@@ -127,7 +127,7 @@ async function recovery(ctx) {
   } catch (e) {
     throw new Error401(e.message);
   }
-  await Auth.resetPassword(password, code);
+  await Auth.recoveryPassword(password, code);
   ctx.status = 204;
 }
 

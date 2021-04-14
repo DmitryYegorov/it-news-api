@@ -2,12 +2,12 @@ const yup = require("yup");
 const Error404 = require("../../../middleware/error/error404");
 const Error400 = require("../../../middleware/error/error400");
 
-const UpdateUserMiddleware = yup.object().shape({
+const UpdateUserSchema = yup.object().shape({
   name: yup.string().trim(),
   email: yup.string().trim().email(),
 });
 
-const IdMiddleware = yup.object().shape({
+const IdSchema = yup.object().shape({
   id: yup.number().min(1).required(),
 });
 
@@ -42,8 +42,8 @@ function validateQuery(schema) {
 }
 
 module.exports = {
-  UpdateUserMiddleware,
-  IdMiddleware,
+  UpdateUserSchema,
+  IdSchema,
   validateBody,
   validateQuery,
 };

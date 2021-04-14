@@ -1,11 +1,7 @@
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 
 const Error404 = require("../middleware/error/error404");
 const Error400 = require("../middleware/error/error400");
-
-const { SECRET } = process.env;
 
 async function getUserById(id) {
   const result = await User.query().findById(id);
@@ -45,19 +41,6 @@ async function getUserByEmail(email) {
   return User.query().where({ email }).select().first();
 }
 
-async function resetPassword(newPassword, code) {
-  const salt = bcrypt.genSaltSync();
-  const hash = bcrypt.hashSync(newPassword, salt);
-  const { email } = await jwt.decode(code, SECRET);
-  const user = await getUserByEmail(email);
-  if (code !== user.recoveryPasswordCode) {
-    throw new Error400("Invalid link!");
-  }
-  await User.query()
-    .update({ recoveryPasswordCode: null, password: hash })
-    .findById(user.id);
-}
-
 async function removeUserById(id) {
   const user = await getUserById(id);
   if (!user) {
@@ -71,6 +54,5 @@ module.exports = {
   getAllUsers,
   updateUser,
   getUserByEmail,
-  resetPassword,
   removeUserById,
 };

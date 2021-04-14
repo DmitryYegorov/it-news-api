@@ -4,10 +4,10 @@ const authenticated = require("../../../middleware/auth");
 const {
   validateQuery,
   validateBody,
-  PostMiddleware,
-  IdMiddleware,
-  CategoryIdMiddleware,
-  AuthorIdMiddleware,
+  PostSchema,
+  IdSchema,
+  CategoryIdSchema,
+  AuthorIdSchema,
 } = require("./validate");
 
 const posts = new Router({
@@ -19,19 +19,19 @@ posts
   .get("/:id", getPostById)
   .get(
     "/category/:category",
-    validateQuery(CategoryIdMiddleware),
+    validateQuery(CategoryIdSchema),
     getPostsByCategory
   )
-  .get("/author/:author", validateQuery(AuthorIdMiddleware), getPostsByAuthor)
-  .post("/", authenticated, validateBody(PostMiddleware), createPost)
+  .get("/author/:author", validateQuery(AuthorIdSchema), getPostsByAuthor)
+  .post("/", authenticated, validateBody(PostSchema), createPost)
   .put(
     "/:id",
     authenticated,
-    validateQuery(IdMiddleware),
-    validateBody(PostMiddleware),
+    validateQuery(IdSchema),
+    validateBody(PostSchema),
     updatePost
   )
-  .delete("/:id", authenticated, validateQuery(IdMiddleware), removePost);
+  .delete("/:id", authenticated, validateQuery(IdSchema), removePost);
 
 async function getAllPosts(ctx) {
   ctx.body = await Post.getAllPosts();

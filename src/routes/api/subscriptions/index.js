@@ -3,9 +3,9 @@ const Subscription = require("../../../entities/subscriptions");
 const User = require("../../../entities/user");
 const authenticated = require("../../../middleware/auth");
 const {
-  SubscribeMiddleware,
-  UserIdMiddleware,
-  AuthorIdMiddleware,
+  SubscribeSchema,
+  UserIdSchema,
+  AuthorIdSchema,
   validateBody,
   validateQuery,
 } = require("./validate");
@@ -15,18 +15,13 @@ const subscription = new Router({
 });
 
 subscription
-  .post(
-    "/",
-    authenticated,
-    validateBody(SubscribeMiddleware),
-    createSubscription
-  )
-  .get("/user/:user", validateQuery(UserIdMiddleware), getSubscriptionsByUser)
-  .get("/author/:author", validateQuery(AuthorIdMiddleware), getSubscribers)
+  .post("/", authenticated, validateBody(SubscribeSchema), createSubscription)
+  .get("/user/:user", validateQuery(UserIdSchema), getSubscriptionsByUser)
+  .get("/author/:author", validateQuery(AuthorIdSchema), getSubscribers)
   .delete(
     "/author/:author",
     authenticated,
-    validateQuery(AuthorIdMiddleware),
+    validateQuery(AuthorIdSchema),
     removeSubscribe
   );
 

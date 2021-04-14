@@ -2,9 +2,9 @@ const Router = require("koa-router");
 const Comment = require("../../../entities/comment");
 const authenticated = require("../../../middleware/auth");
 const {
-  AddCommentMiddleware,
-  UpdateCommentMiddleware,
-  IdMiddleware,
+  AddCommentSchema,
+  UpdateCommentSchema,
+  IdSchema,
   validateBody,
   validateQuery,
 } = require("./validate");
@@ -16,15 +16,15 @@ const comments = new Router({
 comments
   .get("/:id", getCommentById)
   .get("/post/:post", getCommentsByPost)
-  .post("/", authenticated, validateBody(AddCommentMiddleware), createComment)
+  .post("/", authenticated, validateBody(AddCommentSchema), createComment)
   .put(
     "/:id",
     authenticated,
-    validateQuery(IdMiddleware),
-    validateBody(UpdateCommentMiddleware),
+    validateQuery(IdSchema),
+    validateBody(UpdateCommentSchema),
     updateComment
   )
-  .delete("/:id", authenticated, validateQuery(IdMiddleware), removeComment);
+  .delete("/:id", authenticated, validateQuery(IdSchema), removeComment);
 
 async function getCommentById(ctx) {
   const { id } = ctx.request.params;

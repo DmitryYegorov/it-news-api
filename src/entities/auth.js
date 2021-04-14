@@ -64,10 +64,24 @@ async function updatePassword(email, oldPassowrd, newPassword) {
   await UserModel.query().update({ password: hash }).where({ email });
 }
 
+async function recoveryPassword(newPassword, code) {
+  const salt = bcrypt.genSaltSync();
+  const hash = bcrypt.hashSync(newPassword, salt);
+  const { email } = await jwt.decode(code, SECRET);
+  const user = await UserEntity.getUserByEmail(email);
+  if (code !== user.recoveryPasswordCode) {
+    throw new Error400("Invalid link!");
+  }
+  await UserModel.query()
+    .update({ recoveryPasswordCode: null, password: hash })
+    .findById(user.id);
+}
+
 module.exports = {
   resetPassword,
   createUser,
   activateAccount,
   updatePassword,
+  recoveryPassword,
   getUserByEmail: UserEntity.getUserByEmail,
 };

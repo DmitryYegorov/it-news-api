@@ -2,32 +2,32 @@ const yup = require("yup");
 const Error404 = require("../../../middleware/error/error404");
 const Error400 = require("../../../middleware/error/error400");
 
-const AddUserMiddleware = yup.object().shape({
+const AddUserSchema = yup.object().shape({
   name: yup.string().trim().required(),
   email: yup.string().trim().email().required(),
   password: yup.string().trim().min(8).max(24).required(),
 });
 
-const UpdatePasswordMiddleware = yup.object().shape({
+const UpdatePasswordSchema = yup.object().shape({
   email: yup.string().trim().email().required(),
   oldPassword: yup.string().trim().min(8).max(24).required(),
   newPassword: yup.string().trim().min(8).max(24).required(),
 });
 
-const AuthMiddleware = yup.object().shape({
+const AuthSchema = yup.object().shape({
   email: yup.string().trim().email().required(),
   password: yup.string().trim().min(8).max(24).required(),
 });
 
-const PasswordMiddleware = yup.object().shape({
+const PasswordSchema = yup.object().shape({
   password: yup.string().trim().min(8).max(24).required(),
 });
 
-const ResetPasswordMiddleware = yup.object().shape({
+const ResetPasswordSchema = yup.object().shape({
   email: yup.string().trim().email().required(),
 });
 
-const CodeMiddleware = yup.object().shape({
+const CodeSchema = yup.object().shape({
   code: yup.string().trim().required(),
 });
 
@@ -62,12 +62,12 @@ function validateQuery(schema) {
 }
 
 module.exports = {
-  ResetPasswordMiddleware,
-  PasswordMiddleware,
-  AddUserMiddleware,
-  AuthMiddleware,
-  UpdatePasswordMiddleware,
-  CodeMiddleware,
+  ResetPasswordSchema,
+  PasswordSchema,
+  AddUserSchema,
+  AuthSchema,
+  UpdatePasswordSchema,
+  CodeSchema,
   validateBody,
   validateQuery,
 };

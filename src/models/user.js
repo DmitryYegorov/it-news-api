@@ -2,7 +2,7 @@ const Model = require("./BaseModel");
 
 class UserModel extends Model {
   static get hidden() {
-    return ["password"];
+    return ["password", "activationCode", "recoveryPasswordCode"];
   }
 
   static get tableName() {
