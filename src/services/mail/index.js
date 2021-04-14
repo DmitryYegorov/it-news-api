@@ -47,15 +47,7 @@ async function sendNotification(subject, template, email, data) {
     from: "IT-news <dmitrii.egorow2014@yandex.ru>",
     to: email,
     subject,
-    html: Mustache.render(
-      templates[template],
-      data,
-      // {
-      //   name,
-      //   code,
-      // },
-      partials
-    ),
+    html: Mustache.render(templates[template], data, partials),
   });
 }
 
