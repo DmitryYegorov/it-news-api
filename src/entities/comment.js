@@ -7,7 +7,7 @@ const Error400 = require("../middleware/error/error400");
 async function getCommentsByPost(postId) {
   await Post.query().findById(postId);
   return Comment.query()
-    .joinRelated("author_user")
+    .joinRelated("authorUser")
     .where({
       postId,
     })
@@ -23,7 +23,7 @@ async function getCommentsByPost(postId) {
 
 async function getCommentById(id) {
   const comment = await Comment.query()
-    .joinRelated("author_user")
+    .joinRelated("authorUser")
     .where("comments.id", id)
     .select(
       "author_user.name as author",

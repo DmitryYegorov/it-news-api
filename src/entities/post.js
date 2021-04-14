@@ -5,7 +5,7 @@ const Error400 = require("../middleware/error/error400");
 
 async function getAllPosts() {
   return Post.query()
-    .joinRelated("[author_name, category_name]")
+    .joinRelated("[authorUser, categoryName]")
     .select(
       "posts.id as id",
       "author_name.name as author",

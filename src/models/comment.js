@@ -26,7 +26,7 @@ class CommentModel extends Model {
 
   static get relationMappings() {
     return {
-      author_user: {
+      authorUser: {
         relation: Model.HasManyRelation,
         modelClass: UserModel,
         join: {

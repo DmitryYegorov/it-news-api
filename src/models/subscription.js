@@ -26,7 +26,7 @@ class SubscriptionModel extends Model {
     // eslint-disable-next-line global-require,no-unused-vars
     const UserModel = require("./user");
     return {
-      subscriptions_users: {
+      subscriptionsUser: {
         relation: Model.HasManyRelation,
         modelClass: UserModel,
         join: {
@@ -34,7 +34,7 @@ class SubscriptionModel extends Model {
           to: "users.id",
         },
       },
-      subscribers_user: {
+      subscribersUser: {
         relation: Model.HasManyRelation,
         modelClass: UserModel,
         join: {

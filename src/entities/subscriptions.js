@@ -6,7 +6,7 @@ async function getSubscriptionsByUser(userId) {
   await User.getUserById(userId);
   return Subscription.query()
     .where("subscriber", userId)
-    .joinRelated("subscriptions_users")
+    .joinRelated("subscriptionsUser")
     .select("name", "email");
 }
 
@@ -14,7 +14,7 @@ async function getSubscribersByAuthor(userId) {
   await User.getUserById(userId);
   return Subscription.query()
     .where("author", userId)
-    .joinRelated("subscribers_user")
+    .joinRelated("subscribersUser")
     .select("name", "email");
 }
 
