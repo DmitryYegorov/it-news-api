@@ -1,14 +1,17 @@
 const yup = require("yup");
-const Error404 = require("../../../middleware/error/error404");
 const Error400 = require("../../../middleware/error/error400");
+const Error404 = require("../../../middleware/error/error404");
 
-const UpdateUserSchema = yup.object().shape({
-  name: yup.string().trim(),
-  email: yup.string().trim().email(),
+const SubscribeSchema = yup.object().shape({
+  author: yup.number().min(1).required(),
 });
 
-const IdSchema = yup.object().shape({
-  id: yup.number().min(1).required(),
+const UserIdSchema = yup.object().shape({
+  user: yup.number().min(1).required(),
+});
+
+const AuthorIdSchema = yup.object().shape({
+  author: yup.number().min(1).required(),
 });
 
 function validateBody(schema) {
@@ -42,8 +45,9 @@ function validateQuery(schema) {
 }
 
 module.exports = {
-  UpdateUserSchema,
-  IdSchema,
   validateBody,
   validateQuery,
+  SubscribeSchema,
+  UserIdSchema,
+  AuthorIdSchema,
 };

@@ -1,5 +1,4 @@
 const Model = require("./BaseModel");
-const UserModel = require("./user");
 
 class SubscriptionModel extends Model {
   static get tableName() {
@@ -17,30 +16,30 @@ class SubscriptionModel extends Model {
 
       properties: {
         id: { type: "integer" },
-        subscriber: { type: "string", minLength: 5, maxLength: 60 },
-        author: { type: "string", minLength: 5, maxLength: 60 },
+        subscriber: { type: "integer" },
+        author: { type: "integer" },
       },
     };
   }
 
-  static get relationMapping() {
+  static get relationMappings() {
+    // eslint-disable-next-line global-require,no-unused-vars
+    const UserModel = require("./user");
     return {
-      subscriber: {
+      subscriptionsUser: {
         relation: Model.HasManyRelation,
         modelClass: UserModel,
-
         join: {
-          from: "user.id",
-          to: "subscriptions.subscriber",
+          from: "subscriptions.author",
+          to: "users.id",
         },
       },
-      author: {
+      subscribersUser: {
         relation: Model.HasManyRelation,
         modelClass: UserModel,
-
         join: {
-          from: "user.id",
-          to: "subscriptions.author",
+          from: "subscriptions.subscriber",
+          to: "users.id",
         },
       },
     };

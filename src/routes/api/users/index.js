@@ -1,10 +1,12 @@
 const Router = require("koa-router");
 const User = require("../../../entities/user");
 const {
-  AddUserMiddleware,
-  UpdateUserMiddleware,
-  validate,
+  UpdateUserSchema,
+  IdSchema,
+  validateBody,
+  validateQuery,
 } = require("./validate");
+const authenticated = require("../../../middleware/auth");
 
 const users = new Router({
   prefix: "/users",
@@ -12,10 +14,15 @@ const users = new Router({
 
 users
   .get("/", getAllUsers)
-  .get("/:id", getUserById)
-  .post("/", validate(AddUserMiddleware), createUser)
-  .put("/:id", validate(UpdateUserMiddleware), updateUser)
-  .delete("/:id", removeUser);
+  .get("/:id", validateQuery(IdSchema), getUserById)
+  .put(
+    "/:id",
+    authenticated,
+    validateQuery(IdSchema),
+    validateBody(UpdateUserSchema),
+    updateUser
+  )
+  .delete("/:id", authenticated, validateQuery(IdSchema), removeUserById);
 
 async function getAllUsers(ctx) {
   const data = await User.getAllUsers();
@@ -29,12 +36,6 @@ async function getUserById(ctx) {
   ctx.status = 200;
 }
 
-async function createUser(ctx) {
-  const user = ctx.request.body;
-  await User.createUser(user);
-  ctx.status = 201;
-}
-
 async function updateUser(ctx) {
   const data = ctx.request.body;
   const { id } = ctx.request.params;
@@ -42,9 +43,9 @@ async function updateUser(ctx) {
   ctx.status = 200;
 }
 
-async function removeUser(ctx) {
+async function removeUserById(ctx) {
   const { id } = ctx.request.params;
-  ctx.body = await User.removeUserById(id);
+  await User.removeUserById(id);
   ctx.status = 204;
 }
 

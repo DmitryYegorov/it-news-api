@@ -1,6 +1,5 @@
 const Model = require("./BaseModel");
 const UserModel = require("./user");
-const PostModel = require("./post");
 
 class CommentModel extends Model {
   static get tableName() {
@@ -25,22 +24,14 @@ class CommentModel extends Model {
     };
   }
 
-  static get relationMapping() {
+  static get relationMappings() {
     return {
-      author: {
+      authorUser: {
         relation: Model.HasManyRelation,
         modelClass: UserModel,
         join: {
           from: "users.id",
           to: "comments.author",
-        },
-      },
-      post: {
-        relation: Model.HasOneRelation,
-        modelClass: PostModel,
-        join: {
-          from: "posts.id",
-          to: "comments.postId",
         },
       },
     };

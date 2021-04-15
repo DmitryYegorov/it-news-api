@@ -1,38 +1,56 @@
 const Router = require("koa-router");
 const Subscription = require("../../../entities/subscriptions");
+const User = require("../../../entities/user");
+const authenticated = require("../../../middleware/auth");
+const {
+  SubscribeSchema,
+  UserIdSchema,
+  AuthorIdSchema,
+  validateBody,
+  validateQuery,
+} = require("./validate");
 
 const subscription = new Router({
   prefix: "/subscriptions",
 });
 
 subscription
-  .post("/", createSubscription)
-  .get("/user/:user", getSubscriptionsByUser)
-  .get("/author/:author", getSubscribers)
-  .delete("/:id", removeSubscribe);
+  .post("/", authenticated, validateBody(SubscribeSchema), createSubscription)
+  .get("/user/:user", validateQuery(UserIdSchema), getSubscriptionsByUser)
+  .get("/author/:author", validateQuery(AuthorIdSchema), getSubscribers)
+  .delete(
+    "/author/:author",
+    authenticated,
+    validateQuery(AuthorIdSchema),
+    removeSubscribe
+  );
 
 async function createSubscription(ctx) {
-  const data = ctx.request.body;
-  const res = await Subscription.createSubscription(data);
-  ctx.body = res;
+  const { user, author } = ctx.request.body;
+  await Subscription.createSubscription({
+    subscriber: user,
+    author,
+  });
   ctx.status = 201;
 }
 
 async function getSubscriptionsByUser(ctx) {
-  const { user } = ctx.request.params;
-  ctx.body = await Subscription.getSubscriptionsByUser(user);
+  const { params } = ctx.request;
+  ctx.body = await Subscription.getSubscriptionsByUser(params.user);
   ctx.status = 200;
 }
 
 async function getSubscribers(ctx) {
-  const { author } = ctx.request.params;
-  ctx.body = await Subscription.getSubscribersByAuthor(author);
+  const { params } = ctx.request;
+  const author = await User.getUserById(params.author);
+  ctx.body = await Subscription.getSubscribersByAuthor(author.id);
   ctx.status = 200;
 }
 
 async function removeSubscribe(ctx) {
-  const { id } = ctx.request.body;
-  ctx.body = await Subscription.removeSubscription(id);
+  const { author } = ctx.request.params;
+  const { user } = ctx.request.body;
+  await Subscription.removeSubscription(user, author);
   ctx.status = 204;
 }
 

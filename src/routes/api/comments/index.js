@@ -1,5 +1,13 @@
 const Router = require("koa-router");
 const Comment = require("../../../entities/comment");
+const authenticated = require("../../../middleware/auth");
+const {
+  AddCommentSchema,
+  UpdateCommentSchema,
+  IdSchema,
+  validateBody,
+  validateQuery,
+} = require("./validate");
 
 const comments = new Router({
   prefix: "/comments",
@@ -8,9 +16,15 @@ const comments = new Router({
 comments
   .get("/:id", getCommentById)
   .get("/post/:post", getCommentsByPost)
-  .post("/", createComment)
-  .put("/:id", updateComment)
-  .delete("/:id", removeComment);
+  .post("/", authenticated, validateBody(AddCommentSchema), createComment)
+  .put(
+    "/:id",
+    authenticated,
+    validateQuery(IdSchema),
+    validateBody(UpdateCommentSchema),
+    updateComment
+  )
+  .delete("/:id", authenticated, validateQuery(IdSchema), removeComment);
 
 async function getCommentById(ctx) {
   const { id } = ctx.request.params;
@@ -25,22 +39,25 @@ async function getCommentsByPost(ctx) {
 }
 
 async function createComment(ctx) {
-  const comment = ctx.request.body;
-  ctx.body = await Comment.createComment(comment);
+  const { postId, text, user } = ctx.request.body;
+  await Comment.createComment({
+    postId,
+    text,
+    author: user.id,
+  });
   ctx.status = 201;
 }
 
 async function updateComment(ctx) {
   const { id } = ctx.request.params;
-  const comment = ctx.request.body;
-  const res = await Comment.createComment(id, comment);
+  const { text } = ctx.request.body;
+  await Comment.updateComment(id, text);
   ctx.status = 201;
-  ctx.body = res;
 }
 
 async function removeComment(ctx) {
   const { id } = ctx.request.params;
-  ctx.body = await Comment.removeComment(id);
+  await Comment.removeComment(id);
   ctx.status = 204;
 }
 

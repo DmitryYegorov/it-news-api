@@ -1,19 +1,12 @@
 const User = require("../models/user");
-const PostEntity = require("./post");
+
 const Error404 = require("../middleware/error/error404");
 const Error400 = require("../middleware/error/error400");
-
-async function createUser(user) {
-  if (await emailExists(user.email)) {
-    throw new Error400("You cannot use this email");
-  }
-  await User.query().insert(user);
-}
 
 async function getUserById(id) {
   const result = await User.query().findById(id);
   if (!result) {
-    throw new Error404();
+    throw new Error400("User not exists");
   }
   return User.query().findById(id);
 }
@@ -34,7 +27,7 @@ async function updateUser(id, data) {
     }
     if (key === "email") {
       // eslint-disable-next-line no-await-in-loop
-      if (await emailExists(data.email)) {
+      if (await getUserByEmail(result.email)) {
         throw new Error400("You cannot use this email");
       }
     }
@@ -44,29 +37,22 @@ async function updateUser(id, data) {
   await User.query().update({ name, email }).findById(id);
 }
 
+async function getUserByEmail(email) {
+  return User.query().where({ email }).select().first();
+}
+
 async function removeUserById(id) {
-  const result = await User.query().findById(id);
-  if (!result) {
-    throw new Error404();
+  const user = await getUserById(id);
+  if (!user) {
+    throw new Error400("User not exists");
   }
-  await PostEntity.removePostsByAuthor(id);
   await User.query().findById(id).delete();
 }
 
-async function emailExists(email) {
-  const result = await User.query()
-    .where({
-      email,
-    })
-    .select()
-    .first();
-  return !!result;
-}
-
 module.exports = {
-  createUser,
   getUserById,
   getAllUsers,
   updateUser,
+  getUserByEmail,
   removeUserById,
 };

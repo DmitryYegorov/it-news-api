@@ -7,14 +7,14 @@ exports.up = function (knex) {
       .index()
       .references("id")
       .inTable("users")
-      .onDelete("SET NULL");
+      .onDelete("CASCADE");
     table
       .integer("author")
       .notNullable()
       .index()
       .references("id")
       .inTable("users")
-      .onDelete("SET NULL");
+      .onDelete("CASCADE");
     table.dateTime("createdAt").notNullable();
     table.dateTime("updatedAt");
   });

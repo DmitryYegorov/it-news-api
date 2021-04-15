@@ -26,21 +26,21 @@ class PostModel extends Model {
     };
   }
 
-  static get relationMapping() {
+  static get relationMappings() {
     return {
-      author: {
-        relation: Model.HasManyRelation,
+      authorUser: {
+        relation: Model.HasOneRelation,
         modelClass: UserModel,
         join: {
           from: "users.id",
           to: "posts.author",
         },
       },
-      category: {
+      categoryName: {
         relation: Model.HasOneRelation,
         modelClass: CategoryModel,
         join: {
-          from: "category.id",
+          from: "categories.id",
           to: "posts.categoryId",
         },
       },

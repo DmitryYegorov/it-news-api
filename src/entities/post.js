@@ -1,28 +1,34 @@
 const Error404 = require("../middleware/error/error404");
 const Post = require("../models/post");
-const UserEntity = require("./user");
 const CategoryEntity = require("./category");
 const Error400 = require("../middleware/error/error400");
 
 async function getAllPosts() {
-  const posts = await Post.query().select();
-  return posts;
+  return Post.query()
+    .joinRelated("[authorUser, categoryName]")
+    .select(
+      "posts.id as id",
+      "author_name.name as author",
+      "category_name.name as category",
+      "posts.title",
+      "posts.text",
+      "posts.createdAt"
+    );
 }
 
 async function getPostById(id) {
   const post = await Post.query().findById(id);
   if (!post) {
-    throw new Error404();
+    throw new Error404("Post not found");
   }
   return post;
 }
 
 async function createPost(post) {
-  const user = await UserEntity.getUserById(post.author);
   const category = await CategoryEntity.getCategoryById(post.categoryId);
-  if (!user || !category) {
+  if (!category) {
     throw new Error400(
-      "You cannot public a post because user or category not exists"
+      "You cannot public a post because a category not exists"
     );
   }
   await Post.query().insert(post);
@@ -31,15 +37,18 @@ async function createPost(post) {
 async function updatePost(id, data) {
   const post = await Post.query().findById(id);
   if (!post) {
-    throw new Error404();
+    throw new Error400("Post not exists");
   }
-  await Post.query().findById(id).patch(data);
+  const title = data.title || post.title;
+  const text = data.text || post.text;
+  const categoryId = data.categoryId || post.categoryId;
+  await Post.query().update({ title, text, categoryId }).findById(post.id);
 }
 
 async function removePostById(id) {
   const post = await Post.query().findById(id);
   if (!post) {
-    throw new Error404();
+    throw new Error400("Post not exists");
   }
   await Post.query().findById(id).delete();
 }
@@ -68,14 +77,6 @@ async function getPostsByAuthor(author) {
     .select();
 }
 
-async function removePostsByAuthor(author) {
-  const post = await Post.query().where({ author }).select().first();
-  if (!post) {
-    throw new Error404();
-  }
-  await Post.query().where({ author }).delete();
-}
-
 module.exports = {
   getAllPosts,
   getPostById,
@@ -84,5 +85,4 @@ module.exports = {
   removePostById,
   getPostsByCategory,
   getPostsByAuthor,
-  removePostsByAuthor,
 };

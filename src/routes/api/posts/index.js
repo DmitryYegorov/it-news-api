@@ -1,5 +1,14 @@
 const Router = require("koa-router");
 const Post = require("../../../entities/post");
+const authenticated = require("../../../middleware/auth");
+const {
+  validateQuery,
+  validateBody,
+  PostSchema,
+  IdSchema,
+  CategoryIdSchema,
+  AuthorIdSchema,
+} = require("./validate");
 
 const posts = new Router({
   prefix: "/posts",
@@ -8,11 +17,21 @@ const posts = new Router({
 posts
   .get("/", getAllPosts)
   .get("/:id", getPostById)
-  .get("/category/:category", getPostsByCategory)
-  .get("/author/:author", getPostsByAuthor)
-  .post("/", createPost)
-  .put("/:id", updatePost)
-  .delete("/:id", removePost);
+  .get(
+    "/category/:category",
+    validateQuery(CategoryIdSchema),
+    getPostsByCategory
+  )
+  .get("/author/:author", validateQuery(AuthorIdSchema), getPostsByAuthor)
+  .post("/", authenticated, validateBody(PostSchema), createPost)
+  .put(
+    "/:id",
+    authenticated,
+    validateQuery(IdSchema),
+    validateBody(PostSchema),
+    updatePost
+  )
+  .delete("/:id", authenticated, validateQuery(IdSchema), removePost);
 
 async function getAllPosts(ctx) {
   ctx.body = await Post.getAllPosts();
@@ -38,18 +57,21 @@ async function getPostsByAuthor(ctx) {
 }
 
 async function createPost(ctx) {
-  const post = ctx.request.body;
-  const res = await Post.createPost(post);
+  const { categoryId, title, text, user } = ctx.request.body;
+  await Post.createPost({
+    categoryId,
+    title,
+    text,
+    author: user,
+  });
   ctx.status = 201;
-  ctx.body = res;
 }
 
 async function updatePost(ctx) {
   const data = ctx.request.body;
   const { id } = ctx.request.params;
-  const res = await Post.updatePost(id, data);
-  ctx.status = 200;
-  ctx.body = res;
+  await Post.updatePost(id, data);
+  ctx.status = 204;
 }
 
 async function removePost(ctx) {
