@@ -1,6 +1,6 @@
 const dotenv = require("dotenv");
 
-dotenv.config();
+dotenv.config({ path: "./.env" });
 
 const {
   DB_NAME,
@@ -20,6 +20,18 @@ module.exports = {
       host: DB_HOST,
       user: DB_USERNAME,
       password: DB_PASSWORD,
+    },
+    migrations: {
+      directory: "knex/migrations",
+    },
+    debug: true,
+  },
+  production: {
+    client: DB_CLIENT,
+    ssl: { rejectUnauthorized: false },
+    connection: {
+      connectionString: process.env.DATABASE_URL,
+      ssl: { rejectUnauthorized: false },
     },
     migrations: {
       directory: "knex/migrations",
