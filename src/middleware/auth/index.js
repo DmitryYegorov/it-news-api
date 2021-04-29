@@ -14,9 +14,10 @@ async function isAuthenticated(ctx, next) {
     if (!token) {
       throw new Error401();
     }
-    ctx.request.body.user = jwt.verify(token, SECRET).id;
+    jwt.verify(token, SECRET);
     return next();
   } catch (e) {
+    console.log(e);
     throw new Error401();
   }
 }

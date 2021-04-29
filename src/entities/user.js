@@ -25,16 +25,14 @@ async function updateUser(id, data) {
     if (!data[key].trim()) {
       throw new Error400("You cannot send empty data");
     }
-    if (key === "email") {
-      // eslint-disable-next-line no-await-in-loop
-      if (await getUserByEmail(result.email)) {
-        throw new Error400("You cannot use this email");
-      }
-    }
   }
   const name = data.name || result.name;
   const email = data.email || result.email;
-  await User.query().update({ name, email }).findById(id);
+  try {
+    await User.query().update({ name, email }).findById(id);
+  } catch (e) {
+    throw new Error400("This email already use!");
+  }
 }
 
 async function getUserByEmail(email) {

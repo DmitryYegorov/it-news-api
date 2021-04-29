@@ -9,6 +9,7 @@ const {
   ResetPasswordSchema,
   PasswordSchema,
   CodeSchema,
+  RefreshTokenSchema,
   validateBody,
   validateQuery,
 } = require("./validate");
@@ -17,7 +18,7 @@ const Error401 = require("../../../middleware/error/error401");
 const { sendNotification } = require("../../../services/mail");
 const authenticate = require("../../../middleware/auth");
 
-const { SECRET, JwtExp } = process.env;
+const { SECRET, JwtExp, JwtAccessExp } = process.env;
 const auth = new Router({
   prefix: "/auth",
 });
@@ -27,6 +28,7 @@ auth
   .get("/activate/:code", validateQuery(CodeSchema), activateAccount)
   .post("/register", validateBody(AddUserSchema), createUser)
   .post("/reset", validateBody(ResetPasswordSchema), resetPassword)
+  .post("/refresh", validateBody(RefreshTokenSchema), refreshToken)
   .put(
     "/new-password",
     authenticate,
@@ -69,10 +71,13 @@ async function login(ctx, next) {
         if (e) {
           throw new Error400(err.message);
         }
-        const body = { id: user.id, email: user.email };
-        const token = jwt.sign(body, SECRET, { expiresIn: JwtExp });
-        ctx.set("Authorization", `Bearer ${token}`);
-        ctx.body = token;
+        const body = { id: user.id, name: user.name, email: user.email };
+        // eslint-disable-next-line no-shadow
+        const refreshToken = jwt.sign(body, SECRET, { expiresIn: JwtExp });
+        const accessToken = jwt.sign({ refresh: refreshToken }, SECRET, {
+          expiresIn: JwtAccessExp,
+        });
+        ctx.body = { refreshToken, accessToken };
         ctx.status = 200;
         return ctx.login(user);
       });
@@ -123,6 +128,19 @@ async function recovery(ctx) {
   }
   await Auth.recoveryPassword(password, code);
   ctx.status = 204;
+}
+
+async function refreshToken(ctx) {
+  const { token } = ctx.request.body;
+  try {
+    jwt.verify(token, SECRET);
+    const accessToken = jwt.sign({ refresh: token }, SECRET, {
+      expiresIn: JwtAccessExp,
+    });
+    ctx.body = accessToken;
+  } catch (e) {
+    throw new Error401("You must be authenticated!");
+  }
 }
 
 module.exports = auth;

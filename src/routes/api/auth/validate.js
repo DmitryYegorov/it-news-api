@@ -31,6 +31,10 @@ const CodeSchema = yup.object().shape({
   code: yup.string().trim().required(),
 });
 
+const RefreshTokenSchema = yup.object().shape({
+  token: yup.string().trim().required(),
+});
+
 function validateBody(schema) {
   return async (ctx, next) => {
     // eslint-disable-next-line no-useless-catch
@@ -68,6 +72,7 @@ module.exports = {
   AuthSchema,
   UpdatePasswordSchema,
   CodeSchema,
+  RefreshTokenSchema,
   validateBody,
   validateQuery,
 };
