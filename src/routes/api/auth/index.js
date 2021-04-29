@@ -139,7 +139,7 @@ async function refreshToken(ctx) {
     });
     ctx.body = accessToken;
   } catch (e) {
-    throw new Error401("You must be authenticated!");
+    throw new Error401(e.message);
   }
 }
 
