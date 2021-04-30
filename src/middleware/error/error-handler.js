@@ -5,7 +5,7 @@ function errorHandler() {
       await next();
     } catch (e) {
       ctx.body = e.message;
-      ctx.status = e.status;
+      ctx.status = e.code;
     }
   };
 }
