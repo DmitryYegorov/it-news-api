@@ -4,7 +4,8 @@ function errorHandler() {
     try {
       await next();
     } catch (e) {
-      ctx.body = e;
+      ctx.body = e.message;
+      ctx.status = e.status;
     }
   };
 }
