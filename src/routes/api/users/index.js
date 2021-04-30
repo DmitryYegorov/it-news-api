@@ -15,6 +15,7 @@ const users = new Router({
 users
   .get("/", getAllUsers)
   .get("/:id", validateQuery(IdSchema), getUserById)
+  .get("/page/:page/limit/:limit", getUsersByPages)
   .put(
     "/:id",
     authenticated,
@@ -47,6 +48,12 @@ async function removeUserById(ctx) {
   const { id } = ctx.request.params;
   await User.removeUserById(id);
   ctx.status = 204;
+}
+
+async function getUsersByPages(ctx) {
+  const { page, limit } = ctx.params;
+  ctx.body = await User.getByPages(limit, page);
+  ctx.status = 200;
 }
 
 module.exports = users;

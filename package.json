@@ -37,7 +37,7 @@
     "prettier": "2.2.1"
   },
   "scripts": {
-    "start": "node index.js",
+    "start": "pm2 start pm2/ecosystem.config.js --watch",
     "test": "test",
     "lint": "eslint \"**/*.js\"",
     "lint-fix": "eslint \"**/*.js\" --fix"

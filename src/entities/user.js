@@ -47,10 +47,21 @@ async function removeUserById(id) {
   await User.query().findById(id).delete();
 }
 
+async function getByPages(limit, page) {
+  if (!page || !limit) {
+    throw new Error400("Invalid data sent!");
+  }
+  return User.query()
+    .offset((page - 1) * limit)
+    .limit(limit)
+    .select();
+}
+
 module.exports = {
   getUserById,
   getAllUsers,
   updateUser,
   getUserByEmail,
   removeUserById,
+  getByPages,
 };
