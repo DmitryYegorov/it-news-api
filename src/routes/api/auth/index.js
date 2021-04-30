@@ -77,7 +77,7 @@ async function login(ctx, next) {
         const accessToken = jwt.sign({ refresh: refreshToken }, SECRET, {
           expiresIn: JwtAccessExp,
         });
-        ctx.body = { refreshToken, accessToken };
+        ctx.body = { refreshToken, accessToken, user: JSON.stringify(user) };
         ctx.status = 200;
         return ctx.login(user);
       });
