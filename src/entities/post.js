@@ -8,8 +8,8 @@ async function getAllPosts() {
     .joinRelated("[authorUser, categoryName]")
     .select(
       "posts.id as id",
-      "author_name.name as author",
-      "category_name.name as category",
+      "authorUser.name as author",
+      "categoryName.name as category",
       "posts.title",
       "posts.text",
       "posts.createdAt"
